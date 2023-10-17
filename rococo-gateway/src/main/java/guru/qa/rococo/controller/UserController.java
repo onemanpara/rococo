@@ -36,7 +36,11 @@ public class UserController {
     @GetMapping("/api/session")
     public SessionJson getSessionUser(@AuthenticationPrincipal Jwt principal) {
         String username = principal.getClaim("sub");
-        return userDataClient.getSessionInfo(username);
+        SessionJson sessionJson = new SessionJson();
+        sessionJson.setUsername(username);
+        sessionJson.setExpiresAt(principal.getExpiresAt());
+        sessionJson.setIssuedAt(principal.getIssuedAt());
+        return sessionJson;
     }
 
     @GetMapping("/api/user")
