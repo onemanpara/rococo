@@ -35,26 +35,12 @@ public class UserController {
 
     @GetMapping("/api/session")
     public SessionJson getSessionUser(@AuthenticationPrincipal Jwt principal) {
-        if (principal == null) {
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-        }
         String username = principal.getClaim("sub");
         return userDataClient.getSessionInfo(username);
     }
 
     @GetMapping("/api/user")
     public UserJson getUserInfo(@AuthenticationPrincipal Jwt principal) {
-        if (principal == null) {
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-            System.out.println("#######################################");
-        }
         String username = principal.getClaim("sub");
         return userDataClient.user(username);
     }
