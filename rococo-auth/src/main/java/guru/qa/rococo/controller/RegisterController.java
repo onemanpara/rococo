@@ -1,13 +1,17 @@
-package guru.qa.rococoauth.controller;
+package guru.qa.rococo.controller;
 
-import guru.qa.rococoauth.model.RegistrationModel;
-import guru.qa.rococoauth.service.UserService;
+import guru.qa.rococo.model.RegistrationModel;
+import guru.qa.rococo.model.UserJson;
+import guru.qa.rococo.service.UserService;
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class RegisterController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(RegisterController.class);
+
     private static final String REGISTRATION_VIEW_NAME = "register";
     private static final String MODEL_USERNAME_ATTR = "username";
     private static final String MODEL_REG_FORM_ATTR = "registrationModel";
@@ -28,12 +34,14 @@ public class RegisterController {
 
     private final UserService userService;
 
+    private final KafkaTemplate<String, UserJson> kafkaTemplate;
 
     private final String rococoFrontUri;
 
     @Autowired
-    public RegisterController(UserService userService, @Value("${rococo-front.base-uri}") String rococoFrontUri) {
+    public RegisterController(UserService userService, KafkaTemplate<String, UserJson> kafkaTemplate, @Value("${rococo-front.base-uri}") String rococoFrontUri) {
         this.userService = userService;
+        this.kafkaTemplate = kafkaTemplate;
         this.rococoFrontUri = rococoFrontUri;
     }
 
@@ -58,6 +66,11 @@ public class RegisterController {
                 );
                 response.setStatus(HttpServletResponse.SC_CREATED);
                 model.addAttribute(MODEL_USERNAME_ATTR, registeredUserName);
+
+                UserJson user = new UserJson();
+                user.setUsername(registrationModel.getUsername());
+                kafkaTemplate.send("users", user);
+                LOG.info("### Kafka topic [users] sent message: " + user.getUsername());
             } catch (DataIntegrityViolationException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 addErrorToRegistrationModel(

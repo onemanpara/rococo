@@ -1,4 +1,4 @@
-package guru.qa.rococoauth.config.keys;
+package guru.qa.rococo.config.keys;
 
 import com.nimbusds.jose.jwk.RSAKey;
 import jakarta.annotation.Nonnull;

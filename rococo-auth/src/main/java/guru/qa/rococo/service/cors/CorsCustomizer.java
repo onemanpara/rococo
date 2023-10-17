@@ -1,4 +1,4 @@
-package guru.qa.rococoauth.service.cors;
+package guru.qa.rococo.service.cors;
 
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;

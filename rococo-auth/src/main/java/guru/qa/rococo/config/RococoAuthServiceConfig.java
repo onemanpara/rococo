@@ -1,10 +1,10 @@
-package guru.qa.rococoauth.config;
+package guru.qa.rococo.config;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import guru.qa.rococoauth.config.keys.KeyManager;
-import guru.qa.rococoauth.service.cors.CorsCustomizer;
+import guru.qa.rococo.config.keys.KeyManager;
+import guru.qa.rococo.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

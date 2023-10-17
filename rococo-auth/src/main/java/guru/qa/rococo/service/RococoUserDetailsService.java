@@ -1,8 +1,8 @@
-package guru.qa.rococoauth.service;
+package guru.qa.rococo.service;
 
-import guru.qa.rococoauth.data.UserEntity;
-import guru.qa.rococoauth.data.repository.UserRepository;
-import guru.qa.rococoauth.domain.RococoUserPrincipal;
+import guru.qa.rococo.data.UserEntity;
+import guru.qa.rococo.data.repository.UserRepository;
+import guru.qa.rococo.domain.RococoUserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

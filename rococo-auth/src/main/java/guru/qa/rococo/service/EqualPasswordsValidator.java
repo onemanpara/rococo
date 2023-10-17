@@ -1,8 +1,8 @@
-package guru.qa.rococoauth.service;
+package guru.qa.rococo.service;
 
 
-import guru.qa.rococoauth.model.EqualPasswords;
-import guru.qa.rococoauth.model.RegistrationModel;
+import guru.qa.rococo.model.EqualPasswords;
+import guru.qa.rococo.model.RegistrationModel;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 

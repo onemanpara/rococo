@@ -1,9 +1,9 @@
-package guru.qa.rococoauth.service;
+package guru.qa.rococo.service;
 
-import guru.qa.rococoauth.data.Authority;
-import guru.qa.rococoauth.data.AuthorityEntity;
-import guru.qa.rococoauth.data.UserEntity;
-import guru.qa.rococoauth.data.repository.UserRepository;
+import guru.qa.rococo.data.Authority;
+import guru.qa.rococo.data.AuthorityEntity;
+import guru.qa.rococo.data.UserEntity;
+import guru.qa.rococo.data.repository.UserRepository;
 import jakarta.annotation.Nonnull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

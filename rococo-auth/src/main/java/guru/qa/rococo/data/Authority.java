@@ -1,4 +1,4 @@
-package guru.qa.rococoauth.data;
+package guru.qa.rococo.data;
 
 public enum Authority {
     read, write

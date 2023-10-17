@@ -1,4 +1,4 @@
-package guru.qa.rococoauth.model;
+package guru.qa.rococo.model;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

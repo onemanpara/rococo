@@ -1,6 +1,6 @@
-package guru.qa.rococoauth.domain;
+package guru.qa.rococo.domain;
 
-import guru.qa.rococoauth.data.UserEntity;
+import guru.qa.rococo.data.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

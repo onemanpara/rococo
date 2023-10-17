@@ -1,7 +1,7 @@
-package guru.qa.rococoauth.config;
+package guru.qa.rococo.config;
 
-import guru.qa.rococoauth.service.cors.CookieCsrfFilter;
-import guru.qa.rococoauth.service.cors.CorsCustomizer;
+import guru.qa.rococo.service.cors.CookieCsrfFilter;
+import guru.qa.rococo.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

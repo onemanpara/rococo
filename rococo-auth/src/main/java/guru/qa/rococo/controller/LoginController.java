@@ -1,4 +1,4 @@
-package guru.qa.rococoauth.controller;
+package guru.qa.rococo.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

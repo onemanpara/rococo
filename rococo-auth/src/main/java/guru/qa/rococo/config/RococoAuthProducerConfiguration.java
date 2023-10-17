@@ -1,6 +1,6 @@
-package guru.qa.rococoauth.config;
+package guru.qa.rococo.config;
 
-import guru.qa.rococoauth.model.UserJson;
+import guru.qa.rococo.model.UserJson;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
