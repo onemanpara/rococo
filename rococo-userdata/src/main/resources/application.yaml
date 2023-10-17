@@ -41,6 +41,11 @@ spring:
   config:
     activate:
       on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:9092'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
   datasource:
     url: 'jdbc:mysql://localhost:3306/rococo-userdata?serverTimezone=UTC&createDatabaseIfNotExist=true'
   jpa:
@@ -51,6 +56,11 @@ spring:
   config:
     activate:
       on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
+    consumer:
+      group-id: 'userdata'
+      auto-offset-reset: earliest
   datasource:
     url: 'jdbc:mysql://rococo-all-db:3306/rococo-auth?serverTimezone=UTC&createDatabaseIfNotExist=true'
   jpa:
