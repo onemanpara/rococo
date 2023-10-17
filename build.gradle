@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+group = 'guru.qa'
+sourceCompatibility = '17'
+
+subprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
