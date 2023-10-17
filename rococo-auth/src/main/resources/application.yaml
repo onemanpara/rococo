@@ -38,6 +38,7 @@ spring:
 logging:
   level:
     root: INFO
+    org.springframework.kafka: DEBUG
     org.springframework.web: INFO
     org.springframework.security: INFO
     org.springframework.security.oauth2: INFO
@@ -46,6 +47,8 @@ spring:
   config:
     activate:
       on-profile: 'local'
+  kafka:
+    bootstrap-servers: 'localhost:9092'
 
   datasource:
     url: 'jdbc:mysql://localhost:3306/rococo-auth?serverTimezone=UTC&createDatabaseIfNotExist=true'
@@ -61,6 +64,8 @@ spring:
   config:
     activate:
       on-profile: 'docker'
+  kafka:
+    bootstrap-servers: 'kafka:9092'
   datasource:
     url: 'jdbc:mysql://rococo-all-db:3306/rococo-auth?serverTimezone=UTC&createDatabaseIfNotExist=true'
   jpa:
