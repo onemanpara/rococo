@@ -1,7 +1,7 @@
 package guru.qa.rococo.service.api;
 
-import guru.qa.grpc.rococo.grpc.GetAristRequest;
-import guru.qa.grpc.rococo.grpc.GetAristResponse;
+import guru.qa.grpc.rococo.grpc.GetArtistRequest;
+import guru.qa.grpc.rococo.grpc.GetArtistResponse;
 import guru.qa.grpc.rococo.grpc.RococoArtistServiceGrpc;
 import guru.qa.rococo.model.ArtistJson;
 import io.grpc.StatusRuntimeException;
@@ -26,12 +26,12 @@ public class GrpcArtistClient {
     private RococoArtistServiceGrpc.RococoArtistServiceBlockingStub rococoArtistServiceStub;
 
     public @Nonnull ArtistJson getArtist(UUID id) {
-        GetAristRequest request = GetAristRequest.newBuilder()
+        GetArtistRequest request = GetArtistRequest.newBuilder()
                 .setUuid(copyFromUtf8(id.toString()))
                 .build();
 
         try {
-            GetAristResponse response = rococoArtistServiceStub.getArtist(request);
+            GetArtistResponse response = rococoArtistServiceStub.getArtist(request);
             return ArtistJson.fromGrpcMessage(response);
         } catch (StatusRuntimeException e) {
             LOG.error("### Error while calling gRPC server ", e);

@@ -1,7 +1,7 @@
 package guru.qa.rococo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.grpc.rococo.grpc.GetAristResponse;
+import guru.qa.grpc.rococo.grpc.GetArtistResponse;
 
 import java.util.Objects;
 import java.util.UUID;
@@ -49,7 +49,7 @@ public class ArtistJson {
         this.photo = photo;
     }
 
-    public static ArtistJson fromGrpcMessage(GetAristResponse response) {
+    public static ArtistJson fromGrpcMessage(GetArtistResponse response) {
         ArtistJson artist = new ArtistJson();
         String photo = response.getPhoto().toStringUtf8();
         artist.setId(UUID.fromString(response.getUuid().toStringUtf8()));

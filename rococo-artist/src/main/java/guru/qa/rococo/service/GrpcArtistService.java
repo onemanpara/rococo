@@ -1,8 +1,8 @@
 package guru.qa.rococo.service;
 
 import com.google.protobuf.ByteString;
-import guru.qa.grpc.rococo.grpc.GetAristRequest;
-import guru.qa.grpc.rococo.grpc.GetAristResponse;
+import guru.qa.grpc.rococo.grpc.GetArtistRequest;
+import guru.qa.grpc.rococo.grpc.GetArtistResponse;
 import guru.qa.grpc.rococo.grpc.RococoArtistServiceGrpc;
 import guru.qa.rococo.data.ArtistEntity;
 import guru.qa.rococo.data.repository.ArtistRepository;
@@ -24,14 +24,14 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
     }
 
     @Override
-    public void getArtist(GetAristRequest request, StreamObserver<GetAristResponse> responseObserver) {
+    public void getArtist(GetArtistRequest request, StreamObserver<GetArtistResponse> responseObserver) {
         Optional<ArtistEntity> artistSource = artistRepository.findById(fromString(request.getUuid().toStringUtf8()));
         if (artistSource.isEmpty()) {
             throw new NotFoundException("Can`t find artist by id: " + request.getUuid());
         }
         ArtistEntity artist = artistSource.get();
 
-        GetAristResponse response = GetAristResponse.newBuilder()
+        GetArtistResponse response = GetArtistResponse.newBuilder()
                 .setName(artist.getName())
                 .setBiography(artist.getBiography())
                 .setPhoto(ByteString.copyFrom(artist.getPhoto()))
