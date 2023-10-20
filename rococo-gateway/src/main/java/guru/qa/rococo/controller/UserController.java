@@ -2,7 +2,7 @@ package guru.qa.rococo.controller;
 
 import guru.qa.rococo.model.SessionJson;
 import guru.qa.rococo.model.UserJson;
-import guru.qa.rococo.service.UserDataClient;
+import guru.qa.rococo.service.api.UserDataClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
