@@ -5,8 +5,12 @@ import guru.qa.rococo.service.api.GrpcArtistClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -26,6 +30,11 @@ public class ArtistController {
     @GetMapping("/api/artist/{id}")
     public ArtistJson getArtist(@PathVariable UUID id) {
         return grpcArtistClient.getArtist(id);
+    }
+
+    @GetMapping("/api/artist")
+    public Page<ArtistJson> getAll(@RequestParam(required = false) String name, @PageableDefault Pageable pageable) {
+        return grpcArtistClient.getAllArtist(name, pageable);
     }
 
 }
