@@ -1,4 +1,4 @@
-package guru.qa.rococo.service;
+package guru.qa.rococo.service.api;
 
 import guru.qa.rococo.model.SessionJson;
 import guru.qa.rococo.model.UserJson;

@@ -26,11 +26,18 @@ spring:
         jwt:
           issuer-uri: 'http://127.0.0.1:9000'
 
+grpc:
+  client:
+    grpcArtistClient:
+      address: 'static://localhost:8092'
+      negotiationType: PLAINTEXT
+
 rococo-front:
   base-uri: 'http://127.0.0.1:3000'
 rococo-userdata:
   base-uri: 'http://127.0.0.1:8089'
-
+rococo-artist:
+  base-uri: 'http://127.0.0.1:8091'
 ---
 spring:
   config:
@@ -42,8 +49,16 @@ spring:
         jwt:
           issuer-uri: 'http://auth.rococo.dc:9000'
 
+grpc:
+  client:
+    grpcArtistClient:
+      address: 'static://artist.rococo.dc:8092'
+      negotiationType: PLAINTEXT
+
 niffler-front:
   base-uri: 'http://frontend.rococo.dc'
 rococo-userdata:
   base-uri: 'http://userdata.rococo.dc'
+rococo-artist:
+  base-uri: 'http://artist.rococo.dc'
 ---

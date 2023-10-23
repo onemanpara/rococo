@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.rococo;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.rococo.grpc";
+option java_outer_classname = "RococoProto";
+
+service RococoArtistService {
+  rpc GetArtist(GetArtistRequest) returns (GetArtistResponse);
+  rpc GetArtistsWithPagination(GetArtistsWithPaginationRequest) returns (GetArtistsWithPaginationResponse);
+}
+
+message GetArtistRequest {
+  bytes uuid = 1;
+}
+
+message GetArtistResponse {
+  string name = 1;
+  string biography = 2;
+  bytes photo = 3;
+  bytes uuid = 4;
+}
+
+message GetArtistsWithPaginationRequest {
+  string name = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetArtistsWithPaginationResponse {
+  repeated GetArtistResponse artists = 1;
+  int32 total_count = 2;
+}
