@@ -5,6 +5,7 @@
     import { page } from '$app/stores';
     import {onMount} from "svelte";
     import {apiClient} from "$lib/helpers/apiClient";
+    import {goto} from "$app/navigation";
 
     export let errorTrigger: (message: string) => void;
     export let successTrigger: (message: string) => void;
@@ -13,6 +14,7 @@
         const data = await apiClient.loadPainting($page.params.id);
         if(data.error) {
             errorTrigger(data.error);
+            await goto("/not-found");
         } else {
             singlePaintingStore.set({
                 data: data.data,
@@ -24,7 +26,7 @@
 
 <article class="card m-8 p-4 min-h-[90%]">
     <div class="grid grid-cols-1 lg:grid-cols-2 m-4 min-h-full">
-        <img src={$singlePaintingStore?.data?.content} alt={$singlePaintingStore?.data?.title} class="my-4 mx-auto w-100"/>
+        <img src={$singlePaintingStore?.data?.content} alt={$singlePaintingStore?.data?.title} class="my-4 mx-auto w-full"/>
         <div>
             <div>
                 <header class="card-header text-center font-bold">{$singlePaintingStore?.data?.title}</header>
