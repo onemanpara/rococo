@@ -1,0 +1,136 @@
+version: '3.9'
+
+services:
+  rococo-all-db:
+    container_name: rococo-all-db
+    image: mysql:8.2.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin -uroot -psecret ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+    ports:
+      - "3306:3306"
+    volumes:
+      - rococo-mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - rococo-network
+    dns_search: .
+
+  zookeeper:
+    container_name: zookeeper
+    image: confluentinc/cp-zookeeper:7.3.2
+    expose:
+      - "2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+      - ZOOKEEPER_TICK_TIME=2000
+    networks:
+      - rococo-network
+
+  kafka:
+    container_name: kafka
+    image: confluentinc/cp-kafka:7.3.2
+    expose:
+      - "9092"
+    depends_on:
+      zookeeper:
+        condition: service_started
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+      - KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1
+      - KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1
+    networks:
+      - rococo-network
+
+  auth.rococo.dc:
+    container_name: auth.rococo.dc
+    image: onemanpara/rococo-auth:latest
+    ports:
+      - "9000:9000"
+    healthcheck:
+      test: "wget --spider http://localhost:9000/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    depends_on:
+      rococo-all-db:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - rococo-network
+    dns_search: .
+
+  gateway.rococo.dc:
+    container_name: gateway.rococo.dc
+    image: onemanpara/rococo-gateway:latest
+    ports:
+      - "8090:8090"
+    healthcheck:
+      test: "wget --spider http://localhost:8090/actuator/health || exit 1"
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: always
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
+  artist.rococo.dc:
+    container_name: artist.rococo.dc
+    image: onemanpara/rococo-artist:latest
+    expose:
+      - "8091"
+      - "8092"
+    restart: always
+    depends_on:
+      rococo-all-db:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
+  userdata.rococo.dc:
+    container_name: userdata.rococo.dc
+    image: onemanpara/rococo-userdata:latest
+    expose:
+      - "8089"
+    restart: always
+    depends_on:
+      auth.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
+  client.rococo.dc:
+    container_name: client.rococo.dc
+    image: "${FRONT_IMAGE}"
+    ports:
+      - "80:80"
+    restart: always
+    depends_on:
+      gateway.rococo.dc:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
+volumes:
+  rococo-mysql:
+    external: true
+
+networks:
+  rococo-network:
+    driver: bridge

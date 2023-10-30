@@ -32,7 +32,12 @@ public class SecurityConfig {
         corsCustomizer.corsCustomizer(http);
 
         http.authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/register", "/images/**", "/styles/**", "/fonts/**", "/actuator/health")
+                        authorize.requestMatchers(
+                                        "/register",
+                                        "/images/**",
+                                        "/styles/**",
+                                        "/fonts/**",
+                                        "/actuator/health")
                                 .permitAll()
                                 .anyRequest()
                                 .authenticated()

@@ -6,9 +6,15 @@ group = 'guru.qa'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
+repositories {
+    mavenCentral()
+}
+
 subprojects {
-    repositories {
-        mavenCentral()
+    ext {
+        dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
+                ? "arm64v8/eclipse-temurin:19-jre"
+                : "eclipse-temurin:19-jre"
     }
 }
 
