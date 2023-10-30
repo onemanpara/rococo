@@ -8,18 +8,31 @@
 		Toast,
 	} from '@skeletonlabs/skeleton';
 	import {onMount} from "svelte";
-	import {apiClient} from "$lib/helpers/apiClient";
+	import {apiClient} from "$lib/api/apiClient";
 	import {sessionStore} from "$lib/stores/sessionStore.js";
 	import PagesNavigation from "$lib/components/PagesNavigation.svelte";
 	import ToastHandler from "$lib/components/ToastHandler.svelte";
 	import HeaderMenu from "$lib/components/HeaderMenu.svelte";
 	import MainTitle from "$lib/components/MainTitle.svelte";
+	import {goto} from "$app/navigation";
 
 	initializeStores();
 	let isMenuVisible = false;
 
+	const checkCurrentUrlAndRedirectToPreConfiguredUrl = async (currentUrl: URL) => {
+		const preconfiguredHost = import.meta.env.VITE_FRONT_HOST;
+		if (currentUrl.host !== preconfiguredHost){
+			currentUrl.host = preconfiguredHost;
+			currentUrl.hostname = preconfiguredHost;
+			await goto(currentUrl);
+		}
+	}
+
 	onMount(async () => {
-		if (location.pathname === "/authorized") {
+		const currentUrl = new URL(window.location.href);
+		// required check for local development (modes: dev and docker)
+		await checkCurrentUrlAndRedirectToPreConfiguredUrl(currentUrl);
+		if (currentUrl.pathname === "/authorized") {
 			return;
 		}
 		sessionStore.update((prevState) => {

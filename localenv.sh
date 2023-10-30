@@ -1,4 +1,4 @@
-docker run --name rococo-all -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -v rococo-mysql:/var/lib/mysql -d mysql:8.1.0
+docker run --name rococo-all -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -v rococo-mysql:/var/lib/mysql -d mysql:8.2.0
 
 docker run --name=zookeeper -e ZOOKEEPER_CLIENT_PORT=2181 -e ZOOKEEPER_TICK_TIME=2000 -p 2181:2181 -d confluentinc/cp-zookeeper:7.3.2
 
