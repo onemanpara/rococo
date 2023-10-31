@@ -4,6 +4,7 @@ import guru.qa.rococo.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -28,7 +29,10 @@ public class SecurityConfigMain {
 
         http.authorizeHttpRequests(customizer ->
                 customizer.requestMatchers(
-                                antMatcher("/actuator/health")
+                                antMatcher("/actuator/health"),
+                                antMatcher(HttpMethod.GET, "/api/museum/**"),
+                                antMatcher(HttpMethod.GET, "/api/artist/**"),
+                                antMatcher(HttpMethod.GET, "/api/painting/**")
                         )
                         .permitAll()
                         .anyRequest()
