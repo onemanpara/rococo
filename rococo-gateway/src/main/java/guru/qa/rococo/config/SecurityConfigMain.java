@@ -4,8 +4,6 @@ import guru.qa.rococo.service.cors.CorsCustomizer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -16,16 +14,13 @@ import static org.springframework.security.web.util.matcher.AntPathRequestMatche
 
 @EnableWebSecurity
 @Configuration
-@Profile("local")
-public class SecurityConfigLocal {
+public class SecurityConfigMain {
 
     private final CorsCustomizer corsCustomizer;
-    private final Environment environment;
 
     @Autowired
-    public SecurityConfigLocal(CorsCustomizer corsCustomizer, Environment environment) {
+    public SecurityConfigMain(CorsCustomizer corsCustomizer) {
         this.corsCustomizer = corsCustomizer;
-        this.environment = environment;
     }
 
     @Bean
@@ -34,14 +29,16 @@ public class SecurityConfigLocal {
 
         http.authorizeHttpRequests(customizer ->
                 customizer.requestMatchers(
-                                antMatcher(HttpMethod.GET, "/api/session"),
-                                antMatcher(HttpMethod.GET, "/api/artist/**"),
+                                antMatcher("/actuator/health"),
                                 antMatcher(HttpMethod.GET, "/api/museum/**"),
-                                antMatcher(HttpMethod.GET, "/api/painting/**"))
+                                antMatcher(HttpMethod.GET, "/api/artist/**"),
+                                antMatcher(HttpMethod.GET, "/api/painting/**")
+                        )
                         .permitAll()
                         .anyRequest()
                         .authenticated()
         ).oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()));
+
         return http.build();
     }
 }

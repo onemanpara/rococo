@@ -55,10 +55,10 @@ grpc:
       address: 'static://artist.rococo.dc:8092'
       negotiationType: PLAINTEXT
 
-niffler-front:
-  base-uri: 'http://frontend.rococo.dc'
+rococo-front:
+  base-uri: 'http://client.rococo.dc'
 rococo-userdata:
-  base-uri: 'http://userdata.rococo.dc'
+  base-uri: 'http://userdata.rococo.dc:8089'
 rococo-artist:
-  base-uri: 'http://artist.rococo.dc'
+  base-uri: 'http://artist.rococo.dc:8091'
 ---
