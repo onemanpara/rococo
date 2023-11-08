@@ -1,6 +1,5 @@
 package guru.qa.rococo.data;
 
-import guru.qa.rococo.model.CountryJson;
 import jakarta.persistence.*;
 
 import java.util.List;

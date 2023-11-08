@@ -1,9 +1,7 @@
 package guru.qa.rococo.model.museum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import guru.qa.grpc.rococo.grpc.GetArtistResponse;
 import guru.qa.grpc.rococo.grpc.GetMuseumResponse;
-import guru.qa.rococo.model.ArtistJson;
 
 import java.util.Objects;
 import java.util.UUID;
