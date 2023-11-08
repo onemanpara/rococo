@@ -18,10 +18,10 @@ message GetArtistRequest {
 }
 
 message GetArtistResponse {
-  string name = 1;
-  string biography = 2;
-  bytes photo = 3;
-  bytes uuid = 4;
+  bytes uuid = 1;
+  string name = 2;
+  string biography = 3;
+  bytes photo = 4;
 }
 
 message GetArtistsWithPaginationRequest {
@@ -32,5 +32,43 @@ message GetArtistsWithPaginationRequest {
 
 message GetArtistsWithPaginationResponse {
   repeated GetArtistResponse artists = 1;
+  int32 total_count = 2;
+}
+
+service RococoMuseumService {
+  rpc GetMuseum(GetMuseumRequest) returns (GetMuseumResponse);
+  rpc GetMuseumWithPagination(GetMuseumsWithPaginationRequest) returns (GetMuseumsWithPaginationResponse);
+}
+
+message GetMuseumRequest {
+  bytes uuid = 1;
+}
+
+message GetMuseumResponse {
+  bytes uuid = 1;
+  string title = 2;
+  string description = 3;
+  bytes photo = 4;
+  Geo geo = 5;
+}
+
+message Geo {
+  string city = 1;
+  Country country =2;
+}
+
+message Country {
+  bytes uuid = 1;
+  string name = 2;
+}
+
+message GetMuseumsWithPaginationRequest {
+  string title = 1;
+  int32 page = 2;
+  int32 size = 3;
+}
+
+message GetMuseumsWithPaginationResponse {
+  repeated GetMuseumResponse museum = 1;
   int32 total_count = 2;
 }

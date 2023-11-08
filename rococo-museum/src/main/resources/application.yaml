@@ -1,0 +1,61 @@
+server:
+  port: 8093
+  error:
+    include:
+      message: true
+grpc:
+  server:
+    port: 8094
+
+spring:
+  application:
+    name: rococo-museum
+  datasource:
+    hikari:
+      connection-timeout: 20000
+      minimum-idle: 10
+      maximum-pool-size: 30
+      idle-timeout: 10000
+      max-lifetime: 1000
+      auto-commit: true
+    username: root
+    password: secret
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: false
+    generate-ddl: true
+  sql:
+    init:
+      mode: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+---
+spring:
+  config:
+    activate:
+      on-profile: 'local'
+  datasource:
+    url: 'jdbc:mysql://localhost:3306/rococo-museum?serverTimezone=UTC&createDatabaseIfNotExist=true'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+---
+spring:
+  config:
+    activate:
+      on-profile: 'docker'
+  datasource:
+    url: 'jdbc:mysql://rococo-all-db:3306/rococo-museum?serverTimezone=UTC&createDatabaseIfNotExist=true'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+---

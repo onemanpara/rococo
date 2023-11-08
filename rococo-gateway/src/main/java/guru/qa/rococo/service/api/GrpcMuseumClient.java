@@ -1,7 +1,7 @@
 package guru.qa.rococo.service.api;
 
 import guru.qa.grpc.rococo.grpc.*;
-import guru.qa.rococo.model.ArtistJson;
+import guru.qa.rococo.model.museum.MuseumJson;
 import io.grpc.StatusRuntimeException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -21,43 +21,43 @@ import java.util.UUID;
 import static com.google.protobuf.ByteString.copyFromUtf8;
 
 @Component
-public class GrpcArtistClient {
+public class GrpcMuseumClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrpcArtistClient.class);
 
-    @GrpcClient("grpcArtistClient")
-    private RococoArtistServiceGrpc.RococoArtistServiceBlockingStub rococoArtistServiceStub;
+    @GrpcClient("grpcMuseumClient")
+    private RococoMuseumServiceGrpc.RococoMuseumServiceBlockingStub rococoMuseumServiceStub;
 
-    public @Nonnull ArtistJson getArtist(UUID id) {
-        GetArtistRequest request = GetArtistRequest.newBuilder()
+    public @Nonnull MuseumJson getMuseum(UUID id) {
+        GetMuseumRequest request = GetMuseumRequest.newBuilder()
                 .setUuid(copyFromUtf8(id.toString()))
                 .build();
 
         try {
-            GetArtistResponse response = rococoArtistServiceStub.getArtist(request);
-            return ArtistJson.fromGrpcMessage(response);
+            GetMuseumResponse response = rococoMuseumServiceStub.getMuseum(request);
+            return MuseumJson.fromGrpcMessage(response);
         } catch (StatusRuntimeException e) {
             LOG.error("### Error while calling gRPC server ", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
         }
     }
 
-    public @Nonnull Page<ArtistJson> getAllArtist(@Nullable String name, Pageable pageable) {
-        GetArtistsWithPaginationRequest.Builder builder = GetArtistsWithPaginationRequest.newBuilder()
+    public @Nonnull Page<MuseumJson> getAllMuseum(@Nullable String title, Pageable pageable) {
+        GetMuseumsWithPaginationRequest.Builder builder = GetMuseumsWithPaginationRequest.newBuilder()
                 .setPage(pageable.getPageNumber())
                 .setSize(pageable.getPageSize());
-        if (name != null) {
-            builder.setName(name);
+        if (title != null) {
+            builder.setTitle(title);
         }
-        GetArtistsWithPaginationRequest request = builder.build();
+        GetMuseumsWithPaginationRequest request = builder.build();
 
         try {
-            GetArtistsWithPaginationResponse response = rococoArtistServiceStub.getArtistsWithPagination(request);
-            List<ArtistJson> artistJsonList = response.getArtistsList()
+            GetMuseumsWithPaginationResponse response = rococoMuseumServiceStub.getMuseumWithPagination(request);
+            List<MuseumJson> museumJsonList = response.getMuseumList()
                     .stream()
-                    .map(ArtistJson::fromGrpcMessage)
+                    .map(MuseumJson::fromGrpcMessage)
                     .toList();
-            return new PageImpl<>(artistJsonList, pageable, response.getTotalCount());
+            return new PageImpl<>(museumJsonList, pageable, response.getTotalCount());
         } catch (StatusRuntimeException e) {
             LOG.error("### Error while calling gRPC server ", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
