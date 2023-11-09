@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 public class MuseumController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MuseumController.class);
 
     private final GrpcMuseumClient grpcMuseumClient;
 
@@ -33,8 +33,8 @@ public class MuseumController {
     }
 
     @GetMapping("/api/museum")
-    public Page<MuseumJson> getAll(@RequestParam(required = false) String name, @PageableDefault Pageable pageable) {
-        return grpcMuseumClient.getAllMuseum(name, pageable);
+    public Page<MuseumJson> getAllMuseum(@RequestParam(required = false) String title, @PageableDefault Pageable pageable) {
+        return grpcMuseumClient.getAllMuseum(title, pageable);
     }
 
 }

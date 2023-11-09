@@ -101,6 +101,20 @@ services:
       - rococo-network
     dns_search: .
 
+  museum.rococo.dc:
+    container_name: museum.rococo.dc
+    image: onemanpara/rococo-museum:latest
+    expose:
+      - "8093"
+      - "8094"
+    restart: always
+    depends_on:
+      rococo-all-db:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
   userdata.rococo.dc:
     container_name: userdata.rococo.dc
     image: onemanpara/rococo-userdata:latest

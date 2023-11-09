@@ -33,9 +33,9 @@ public class MuseumController {
     }
 
     @GetMapping("/api/museum")
-    public Page<MuseumJson> getAll(@RequestParam(required = false) String name,
+    public Page<MuseumJson> getAll(@RequestParam(required = false) String title,
                                    @PageableDefault Pageable pageable) {
-        return museumService.getAllMuseum(name, pageable);
+        return museumService.getAllMuseum(title, pageable);
     }
 
 }

@@ -2,7 +2,6 @@ package guru.qa.rococo.model.museum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.grpc.rococo.grpc.Country;
-import guru.qa.grpc.rococo.grpc.GetMuseumResponse;
 
 import java.util.Objects;
 

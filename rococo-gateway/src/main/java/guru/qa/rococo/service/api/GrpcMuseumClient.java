@@ -1,6 +1,7 @@
 package guru.qa.rococo.service.api;
 
 import guru.qa.grpc.rococo.grpc.*;
+import guru.qa.rococo.model.museum.CountryJson;
 import guru.qa.rococo.model.museum.MuseumJson;
 import io.grpc.StatusRuntimeException;
 import jakarta.annotation.Nonnull;
@@ -23,7 +24,7 @@ import static com.google.protobuf.ByteString.copyFromUtf8;
 @Component
 public class GrpcMuseumClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GrpcArtistClient.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GrpcMuseumClient.class);
 
     @GrpcClient("grpcMuseumClient")
     private RococoMuseumServiceGrpc.RococoMuseumServiceBlockingStub rococoMuseumServiceStub;
@@ -58,6 +59,25 @@ public class GrpcMuseumClient {
                     .map(MuseumJson::fromGrpcMessage)
                     .toList();
             return new PageImpl<>(museumJsonList, pageable, response.getTotalCount());
+        } catch (StatusRuntimeException e) {
+            LOG.error("### Error while calling gRPC server ", e);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
+        }
+    }
+
+    public @Nonnull Page<CountryJson> getAllCountry(Pageable pageable) {
+        GetCountriesRequest request = GetCountriesRequest.newBuilder()
+                .setPage(pageable.getPageNumber())
+                .setSize(pageable.getPageSize())
+                .build();
+
+        try {
+            GetCountriesResponse response = rococoMuseumServiceStub.getCountries(request);
+            List<CountryJson> countryJsonList = response.getCountryList()
+                    .stream()
+                    .map(CountryJson::fromGrpcMessage)
+                    .toList();
+            return new PageImpl<>(countryJsonList, pageable, response.getTotalCount());
         } catch (StatusRuntimeException e) {
             LOG.error("### Error while calling gRPC server ", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);

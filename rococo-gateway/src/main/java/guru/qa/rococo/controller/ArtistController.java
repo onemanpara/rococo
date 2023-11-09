@@ -18,7 +18,7 @@ import java.util.UUID;
 @RestController
 public class ArtistController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ArtistController.class);
 
     private final GrpcArtistClient grpcArtistClient;
 
