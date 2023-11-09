@@ -29,11 +29,10 @@ public class CountryJson {
         this.name = name;
     }
 
-    public static CountryJson fromGrpcMessage(GetMuseumResponse response) {
+    public static CountryJson fromGrpcMessage(Country response) {
         CountryJson countryJson = new CountryJson();
-        Country country = response.getGeo().getCountry();
-        countryJson.setId(country.getUuid().toString());
-        countryJson.setName(country.getName());
+        countryJson.setId(response.getUuid().toString());
+        countryJson.setName(response.getName());
         return countryJson;
     }
 

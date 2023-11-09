@@ -65,7 +65,7 @@ public class MuseumJson {
 
         GeoJson geoJson = new GeoJson();
         geoJson.setCity(response.getGeo().getCity());
-        geoJson.setCountry(CountryJson.fromGrpcMessage(response));
+        geoJson.setCountry(CountryJson.fromGrpcMessage(response.getGeo().getCountry()));
 
         museum.setId(UUID.fromString(response.getUuid().toStringUtf8()));
         museum.setTitle(response.getTitle());

@@ -38,6 +38,7 @@ message GetArtistsWithPaginationResponse {
 service RococoMuseumService {
   rpc GetMuseum(GetMuseumRequest) returns (GetMuseumResponse);
   rpc GetMuseumWithPagination(GetMuseumsWithPaginationRequest) returns (GetMuseumsWithPaginationResponse);
+  rpc GetCountries(GetCountriesRequest) returns (GetCountriesResponse);
 }
 
 message GetMuseumRequest {
@@ -70,5 +71,15 @@ message GetMuseumsWithPaginationRequest {
 
 message GetMuseumsWithPaginationResponse {
   repeated GetMuseumResponse museum = 1;
+  int32 total_count = 2;
+}
+
+message GetCountriesRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message GetCountriesResponse {
+  repeated Country country = 1;
   int32 total_count = 2;
 }
