@@ -1,6 +1,7 @@
 package guru.qa.rococo.model;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class SessionJson {
 
@@ -32,4 +33,16 @@ public class SessionJson {
         this.username = username;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SessionJson that = (SessionJson) o;
+        return Objects.equals(expiresAt, that.expiresAt) && Objects.equals(issuedAt, that.issuedAt) && Objects.equals(username, that.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(expiresAt, issuedAt, username);
+    }
 }

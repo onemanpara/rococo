@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class CountryService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MuseumService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CountryService.class);
 
     private final CountryRepository countryRepository;
 

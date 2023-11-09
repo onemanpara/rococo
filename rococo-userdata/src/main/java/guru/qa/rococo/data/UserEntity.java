@@ -2,6 +2,8 @@ package guru.qa.rococo.data;
 
 import jakarta.persistence.*;
 
+import java.util.Arrays;
+import java.util.Objects;
 import java.util.UUID;
 
 @Entity
@@ -63,6 +65,21 @@ public class UserEntity {
 
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Arrays.equals(avatar, that.avatar);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(id, username, firstname, lastname);
+        result = 31 * result + Arrays.hashCode(avatar);
+        return result;
     }
 
 }

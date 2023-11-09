@@ -14,8 +14,6 @@ public class AuthorityEntity {
     @Column(name = "id", nullable = false, length = 36)
     private UUID id;
 
-
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Authority authority;
