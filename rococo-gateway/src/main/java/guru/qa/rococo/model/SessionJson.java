@@ -4,17 +4,16 @@ import java.time.Instant;
 import java.util.Objects;
 
 public class SessionJson {
-
-    private Instant expiresAt;
-    private Instant issuedAt;
     private String username;
+    private Instant issuedAt;
+    private Instant expiresAt;
 
-    public Instant getExpiresAt() {
-        return expiresAt;
+    public String getUsername() {
+        return username;
     }
 
-    public void setExpiresAt(Instant expiresAt) {
-        this.expiresAt = expiresAt;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Instant getIssuedAt() {
@@ -25,12 +24,22 @@ public class SessionJson {
         this.issuedAt = issuedAt;
     }
 
-    public String getUsername() {
-        return username;
+    public Instant getExpiresAt() {
+        return expiresAt;
     }
 
-    public void setUsername(String username) {
+    public void setExpiresAt(Instant expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public static SessionJson emptySession() {
+        return new SessionJson(null, null, null);
+    }
+
+    public SessionJson(String username, Instant issuedAt, Instant expiresAt) {
         this.username = username;
+        this.issuedAt = issuedAt;
+        this.expiresAt = expiresAt;
     }
 
     @Override

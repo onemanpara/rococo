@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("/api/user")
 public class UserController {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserController.class);
@@ -20,12 +21,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PatchMapping("/api/user")
+    @PatchMapping
     public UserJson updateUserInfo(@RequestBody UserJson user) {
         return userService.update(user);
     }
 
-    @GetMapping("/api/user")
+    @GetMapping
     public UserJson user(@RequestParam String username) {
         return userService.getCurrentUser(username);
     }

@@ -8,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
+@RequestMapping("/api/museum/")
 public class MuseumController {
 
     private static final Logger LOG = LoggerFactory.getLogger(MuseumController.class);
@@ -27,12 +25,12 @@ public class MuseumController {
         this.museumService = museumService;
     }
 
-    @GetMapping("/api/museum/{id}")
+    @GetMapping("/{id}")
     public MuseumJson getMuseum(@PathVariable UUID id) {
         return museumService.getMuseum(id);
     }
 
-    @GetMapping("/api/museum")
+    @GetMapping
     public Page<MuseumJson> getAll(@RequestParam(required = false) String title,
                                    @PageableDefault Pageable pageable) {
         return museumService.getAllMuseum(title, pageable);
