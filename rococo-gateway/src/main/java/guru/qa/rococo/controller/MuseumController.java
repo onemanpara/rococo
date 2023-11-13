@@ -1,7 +1,9 @@
 package guru.qa.rococo.controller;
 
 import guru.qa.rococo.model.museum.MuseumJson;
+import guru.qa.rococo.service.api.GrpcCountryClient;
 import guru.qa.rococo.service.api.GrpcMuseumClient;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +23,7 @@ public class MuseumController {
     private final GrpcMuseumClient grpcMuseumClient;
 
     @Autowired
-    public MuseumController(GrpcMuseumClient grpcMuseumClient) {
+    public MuseumController(GrpcMuseumClient grpcMuseumClient, GrpcCountryClient grpcCountryClient) {
         this.grpcMuseumClient = grpcMuseumClient;
     }
 
@@ -33,6 +35,16 @@ public class MuseumController {
     @GetMapping
     public Page<MuseumJson> getAllMuseum(@RequestParam(required = false) String title, @PageableDefault Pageable pageable) {
         return grpcMuseumClient.getAllMuseum(title, pageable);
+    }
+
+    @PostMapping
+    public MuseumJson addMuseum(@Valid @RequestBody MuseumJson museum) {
+        return grpcMuseumClient.addMuseum(museum);
+    }
+
+    @PatchMapping
+    public MuseumJson updateMuseum(@Valid @RequestBody MuseumJson museum) {
+        return grpcMuseumClient.updateMuseum(museum);
     }
 
 }

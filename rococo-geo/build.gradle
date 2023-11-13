@@ -11,18 +11,18 @@ version '0.0.1-SNAPSHOT'
 dependencies {
     implementation project(':rococo-grpc-common')
 
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-web-services'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "net.devh:grpc-server-spring-boot-starter:${project.ext.springGrpcVersion}"
+    implementation "org.flywaydb:flyway-core:${project.ext.flywayVersion}"
+    implementation "org.flywaydb:flyway-mysql:${project.ext.flywayVersion}"
     runtimeOnly "mysql:mysql-connector-java:${project.ext.mysqlConnectorVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 docker {
     dependsOn build
-    name "onemanpara/rococo-artist:${project.version}"
-    tag 'latest', 'onemanpara/rococo-artist:latest'
+    name "onemanpara/rococo-geo:${project.version}"
+    tag 'latest', 'onemanpara/rococo-geo:latest'
     files bootJar.archiveFile
     buildArgs([APP_VER: project.version, DOCKER: project.ext.dockerImage])
     noCache true

@@ -1,8 +1,12 @@
 package guru.qa.rococo.model.museum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import guru.qa.grpc.rococo.grpc.CountryId;
+import guru.qa.grpc.rococo.grpc.Geo;
 
 import java.util.Objects;
+
+import static com.google.protobuf.ByteString.copyFromUtf8;
 
 public class GeoJson {
 
@@ -25,6 +29,21 @@ public class GeoJson {
 
     public void setCountry(CountryJson country) {
         this.country = country;
+    }
+
+    public GeoJson(String city, CountryJson country) {
+        this.city = city;
+        this.country = country;
+    }
+
+    public static Geo toGrpcMessage(GeoJson geo) {
+        CountryId country = CountryId.newBuilder()
+                .setId(copyFromUtf8(geo.getCountry().id().toString()))
+                .build();
+        return Geo.newBuilder()
+                .setCity(geo.getCity())
+                .setCountry(country)
+                .build();
     }
 
     @Override

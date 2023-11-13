@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package guru.qa.grpc.rococo;
+
+option java_multiple_files = true;
+option java_package = "guru.qa.grpc.rococo.grpc";
+option java_outer_classname = "RococoGeoProto";
+
+service RococoCountryService {
+  rpc GetCountry(CountryId) returns (CountryResponse);
+  rpc GetAllCountry(AllCountryRequest) returns (AllCountryResponse);
+  rpc GetCountriesByIds(CountryIdsRequest) returns (AllCountryByIdsResponse);
+}
+
+message CountryId {
+  bytes id = 1;
+}
+
+message CountryResponse {
+  bytes id = 1;
+  string name = 2;
+}
+
+message AllCountryRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message AllCountryResponse {
+  repeated CountryResponse country = 1;
+  int32 total_count = 2;
+}
+
+message CountryIdsRequest {
+  repeated bytes id = 1;
+}
+
+message AllCountryByIdsResponse {
+  repeated CountryResponse country = 1;
+}

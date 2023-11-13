@@ -1,10 +1,10 @@
 grpc:
   server:
-    port: 8094
+    port: 8096
 
 spring:
   application:
-    name: rococo-museum
+    name: rococo-geo
   datasource:
     hikari:
       connection-timeout: 20000
@@ -15,6 +15,12 @@ spring:
       auto-commit: true
     username: root
     password: secret
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: rococo-geo
+    locations: classpath:db.migration.rococo-geo
   jpa:
     properties:
       hibernate:
@@ -24,14 +30,13 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: false
     generate-ddl: true
-  sql:
-    init:
-      mode: always
 
 logging:
   level:
     root: INFO
     org.springframework.web: INFO
+    org.flywaydb.core: DEBUG
+    org.hibernate.SQL: DEBUG
 
 ---
 spring:
@@ -39,17 +44,17 @@ spring:
     activate:
       on-profile: 'local'
   datasource:
-    url: 'jdbc:mysql://localhost:3306/rococo-museum?serverTimezone=UTC&createDatabaseIfNotExist=true'
+    url: 'jdbc:mysql://localhost:3306/rococo-geo?serverTimezone=UTC&createDatabaseIfNotExist=true'
   jpa:
     hibernate:
-      ddl-auto: validate
+        ddl-auto: validate
 ---
 spring:
   config:
     activate:
       on-profile: 'docker'
   datasource:
-    url: 'jdbc:mysql://rococo-all-db:3306/rococo-museum?serverTimezone=UTC&createDatabaseIfNotExist=true'
+    url: 'jdbc:mysql://rococo-all-db:3306/rococo-geo?serverTimezone=UTC&createDatabaseIfNotExist=true'
   jpa:
     hibernate:
       ddl-auto: validate
