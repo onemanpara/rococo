@@ -2,74 +2,72 @@ package guru.qa.rococo.service;
 
 import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.*;
-import guru.qa.rococo.data.CountryEntity;
 import guru.qa.rococo.data.MuseumEntity;
-import guru.qa.rococo.data.repository.CountryRepository;
 import guru.qa.rococo.data.repository.MuseumRepository;
-import guru.qa.rococo.ex.NotFoundException;
 import io.grpc.stub.StreamObserver;
 import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Optional;
+import java.util.UUID;
 
+import static io.grpc.Status.NOT_FOUND;
 import static java.util.UUID.fromString;
 
 @GrpcService
 public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServiceImplBase {
 
     private final MuseumRepository museumRepository;
-    private final CountryRepository countryRepository;
 
-    public GrpcMuseumService(MuseumRepository museumRepository, CountryRepository countryRepository) {
+    public GrpcMuseumService(MuseumRepository museumRepository) {
         this.museumRepository = museumRepository;
-        this.countryRepository = countryRepository;
     }
 
     @Override
-    public void getMuseum(GetMuseumRequest request, StreamObserver<GetMuseumResponse> responseObserver) {
-        Optional<MuseumEntity> museumSource = museumRepository.findById(fromString(request.getUuid().toStringUtf8()));
-        if (museumSource.isEmpty()) {
-            throw new NotFoundException("Can`t find museum by id: " + request.getUuid());
-        }
-        MuseumEntity museum = museumSource.get();
-        Geo geo = getGeoFromEntity(museum);
+    public void getMuseum(MuseumRequest request, StreamObserver<MuseumResponse> responseObserver) {
+        UUID museumId = fromString(request.getId().toStringUtf8());
 
-        GetMuseumResponse response = GetMuseumResponse.newBuilder()
-                .setUuid(ByteString.copyFromUtf8(museum.getId().toString()))
-                .setTitle(museum.getTitle())
-                .setDescription(museum.getDescription())
-                .setPhoto(ByteString.copyFrom(museum.getPhoto()))
-                .setGeo(geo)
-                .build();
+        museumRepository.findById(museumId)
+                .ifPresentOrElse(
+                        museumEntity -> {
+                            MuseumResponse response = MuseumResponse.newBuilder()
+                                    .setId(ByteString.copyFromUtf8(museumEntity.getId().toString()))
+                                    .setTitle(museumEntity.getTitle())
+                                    .setDescription(museumEntity.getDescription())
+                                    .setPhoto(ByteString.copyFrom(museumEntity.getPhoto()))
+                                    .setGeo(getGeoFromEntity(museumEntity))
+                                    .build();
 
-        responseObserver.onNext(response);
-        responseObserver.onCompleted();
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                        },
+                        () -> responseObserver.onError(
+                                NOT_FOUND.withDescription("Can't find museum by id: " + museumId)
+                                        .asRuntimeException()
+                        )
+                );
     }
 
     @Override
-    public void getMuseumWithPagination(GetMuseumsWithPaginationRequest request, StreamObserver<GetMuseumsWithPaginationResponse> responseObserver) {
+    public void getAllMuseum(AllMuseumRequest request, StreamObserver<AllMuseumResponse> responseObserver) {
         String title = request.getTitle();
         int page = request.getPage();
         int size = request.getSize();
-
         PageRequest pageable = PageRequest.of(page, size);
 
         Page<MuseumEntity> museumPage = museumRepository.findAllByTitleContainsIgnoreCase(title, pageable);
 
-        GetMuseumsWithPaginationResponse.Builder responseBuilder = GetMuseumsWithPaginationResponse.newBuilder();
-        for (MuseumEntity museum : museumPage) {
-            Geo geo = getGeoFromEntity(museum);
-            GetMuseumResponse museumResponse = GetMuseumResponse.newBuilder()
-                    .setUuid(ByteString.copyFromUtf8(museum.getId().toString()))
-                    .setTitle(museum.getTitle())
-                    .setDescription(museum.getDescription())
-                    .setPhoto(ByteString.copyFrom(museum.getPhoto()))
-                    .setGeo(geo)
+        AllMuseumResponse.Builder responseBuilder = AllMuseumResponse.newBuilder();
+        museumPage.forEach(museumEntity -> {
+            MuseumResponse museumResponse = MuseumResponse.newBuilder()
+                    .setId(ByteString.copyFromUtf8(museumEntity.getId().toString()))
+                    .setTitle(museumEntity.getTitle())
+                    .setDescription(museumEntity.getDescription())
+                    .setPhoto(ByteString.copyFrom(museumEntity.getPhoto()))
+                    .setGeo(getGeoFromEntity(museumEntity))
                     .build();
             responseBuilder.addMuseum(museumResponse);
-        }
+        });
         responseBuilder.setTotalCount((int) museumPage.getTotalElements());
 
         responseObserver.onNext(responseBuilder.build());
@@ -77,39 +75,39 @@ public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServi
     }
 
     @Override
-    public void getCountries(GetCountriesRequest request, StreamObserver<GetCountriesResponse> responseObserver) {
-        int page = request.getPage();
-        int size = request.getSize();
-
-        PageRequest pageable = PageRequest.of(page, size);
-
-        Page<CountryEntity> countryPage = countryRepository.findAll(pageable);
-        GetCountriesResponse.Builder responseBuilder = GetCountriesResponse.newBuilder();
-        for (CountryEntity countryEntity : countryPage) {
-            Country country = getCountryFromEntity(countryEntity);
-            responseBuilder.addCountry(country);
-        }
-        responseBuilder.setTotalCount((int) countryPage.getTotalElements());
-
-        responseObserver.onNext(responseBuilder.build());
+    public void addMuseum(AddMuseumRequest addMuseumRequest, StreamObserver<MuseumResponse> responseObserver) {
+        MuseumEntity entity = museumRepository.save(MuseumEntity.fromGrpcMessage(addMuseumRequest));
+        responseObserver.onNext(MuseumEntity.toGrpcMessage(entity));
         responseObserver.onCompleted();
     }
 
-    private Geo getGeoFromEntity(MuseumEntity museum) {
-        Country country = Country.newBuilder()
-                .setUuid(ByteString.copyFromUtf8(museum.getCountry().getId().toString()))
-                .setName(museum.getCountry().getName())
-                .build();
-        return Geo.newBuilder()
-                .setCity(museum.getCity())
-                .setCountry(country)
-                .build();
+    @Override
+    public void updateMuseum(UpdateMuseumRequest request, StreamObserver<MuseumResponse> responseObserver) {
+        UUID museumId = fromString(request.getId().toStringUtf8());
+
+        museumRepository.findById(museumId)
+                .ifPresentOrElse(
+                        museumEntity -> {
+                            AddMuseumRequest museumData = request.getMuseumData();
+                            museumEntity.setTitle(museumData.getTitle());
+                            museumEntity.setDescription(museumData.getDescription());
+                            museumEntity.setPhoto(museumData.getPhoto().toByteArray());
+                            museumEntity.setCity(museumData.getGeo().getCity());
+                            museumEntity.setGeoId(UUID.fromString(museumData.getGeo().getCountry().getId().toStringUtf8()));
+                            museumRepository.save(museumEntity);
+                            responseObserver.onNext(MuseumEntity.toGrpcMessage(museumEntity));
+                            responseObserver.onCompleted();
+                        }, () -> responseObserver.onError(
+                                NOT_FOUND.withDescription("Can't find museum by id: " + museumId)
+                                        .asRuntimeException()
+                        )
+                );
     }
 
-    private Country getCountryFromEntity(CountryEntity country) {
-        return Country.newBuilder()
-                .setUuid(ByteString.copyFromUtf8(country.getId().toString()))
-                .setName(country.getName())
+    private Geo getGeoFromEntity(MuseumEntity museum) {
+        return Geo.newBuilder()
+                .setCity(museum.getCity())
+                .setCountry(CountryId.newBuilder().setId(ByteString.copyFromUtf8(museum.getGeoId().toString())))
                 .build();
     }
 

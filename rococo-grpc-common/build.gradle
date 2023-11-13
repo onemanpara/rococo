@@ -12,10 +12,6 @@ plugins {
     id 'com.google.protobuf' version "${protobufPluginVersion}"
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"

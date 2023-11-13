@@ -8,10 +8,6 @@ plugins {
 group = 'guru.qa'
 version = '0.0.1-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -21,8 +17,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-validation"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation 'org.springframework.security:spring-security-oauth2-authorization-server:1.1.1'
-    implementation 'org.springframework.kafka:spring-kafka:3.0.7'
-    runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+    implementation "org.springframework.kafka:spring-kafka:${project.ext.spingKafkaVersion}"
+    runtimeOnly "mysql:mysql-connector-java:${project.ext.mysqlConnectorVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

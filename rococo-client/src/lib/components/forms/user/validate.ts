@@ -8,10 +8,10 @@ export const validateForm = (
     userFormErrorStore.update((prevState) => {
         return {
             ...prevState,
-            firstname: firstname?.length > 255
+            firstname: firstname?.length > 30
                     ? Errors.NAME_LENGTH_CONSTRAINT_MAX
                     : "",
-            lastname: lastname?.length > 255
+            lastname: lastname?.length > 30
                     ? Errors.SURNAME_LENGTH_CONSTRAINT_MAX
                     : "",
         }

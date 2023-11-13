@@ -3,7 +3,7 @@ version: '3.9'
 services:
   rococo-all-db:
     container_name: rococo-all-db
-    image: mysql:8.2.0
+    image: mysql:8.0.33
     environment:
       - MYSQL_ROOT_PASSWORD=secret
     healthcheck:
@@ -105,7 +105,19 @@ services:
     container_name: museum.rococo.dc
     image: onemanpara/rococo-museum:latest
     expose:
-      - "8093"
+      - "8094"
+    restart: always
+    depends_on:
+      rococo-all-db:
+        condition: service_healthy
+    networks:
+      - rococo-network
+    dns_search: .
+
+  geo.rococo.dc:
+    container_name: geo.rococo.dc
+    image: onemanpara/rococo-geo:latest
+    expose:
       - "8094"
     restart: always
     depends_on:

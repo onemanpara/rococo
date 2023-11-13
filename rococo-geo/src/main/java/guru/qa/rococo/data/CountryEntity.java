@@ -2,7 +2,6 @@ package guru.qa.rococo.data;
 
 import jakarta.persistence.*;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -18,9 +17,6 @@ public class CountryEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "country")
-    private List<MuseumEntity> museums;
-
     public UUID getId() {
         return id;
     }
@@ -35,14 +31,6 @@ public class CountryEntity {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<MuseumEntity> getMuseums() {
-        return museums;
-    }
-
-    public void setMuseums(List<MuseumEntity> museums) {
-        this.museums = museums;
     }
 
     @Override

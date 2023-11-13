@@ -2,8 +2,7 @@ package guru.qa.rococo.controller;
 
 import guru.qa.rococo.model.ArtistJson;
 import guru.qa.rococo.service.api.GrpcArtistClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +14,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/artist")
 public class ArtistController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ArtistController.class);
 
     private final GrpcArtistClient grpcArtistClient;
 
@@ -33,6 +30,16 @@ public class ArtistController {
     @GetMapping
     public Page<ArtistJson> getAll(@RequestParam(required = false) String name, @PageableDefault Pageable pageable) {
         return grpcArtistClient.getAllArtist(name, pageable);
+    }
+
+    @PostMapping
+    public ArtistJson addArtist(@Valid @RequestBody ArtistJson artist) {
+        return grpcArtistClient.addArtist(artist);
+    }
+
+    @PatchMapping
+    public ArtistJson updateArtist(@Valid @RequestBody ArtistJson artist) {
+        return grpcArtistClient.updateArtist(artist);
     }
 
 }

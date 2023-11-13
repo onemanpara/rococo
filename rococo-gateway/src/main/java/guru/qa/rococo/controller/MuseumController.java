@@ -2,8 +2,7 @@ package guru.qa.rococo.controller;
 
 import guru.qa.rococo.model.museum.MuseumJson;
 import guru.qa.rococo.service.api.GrpcMuseumClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +14,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/museum")
 public class MuseumController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(MuseumController.class);
 
     private final GrpcMuseumClient grpcMuseumClient;
 
@@ -33,6 +30,16 @@ public class MuseumController {
     @GetMapping
     public Page<MuseumJson> getAllMuseum(@RequestParam(required = false) String title, @PageableDefault Pageable pageable) {
         return grpcMuseumClient.getAllMuseum(title, pageable);
+    }
+
+    @PostMapping
+    public MuseumJson addMuseum(@Valid @RequestBody MuseumJson museum) {
+        return grpcMuseumClient.addMuseum(museum);
+    }
+
+    @PatchMapping
+    public MuseumJson updateMuseum(@Valid @RequestBody MuseumJson museum) {
+        return grpcMuseumClient.updateMuseum(museum);
     }
 
 }

@@ -11,7 +11,16 @@ repositories {
 }
 
 subprojects {
+    repositories {
+        mavenCentral()
+    }
     ext {
+        mysqlConnectorVersion = "8.0.33"
+        springGrpcVersion = "2.14.0.RELEASE"
+        flywayVersion = "9.22.3"
+        spingKafkaVersion = "3.0.7"
+        lombokVersion = "1.18.30"
+
         dockerImage = System.getProperty("os.arch") == "aarch64" || System.getProperty("os.arch") == "arm64"
                 ? "arm64v8/eclipse-temurin:19-jre"
                 : "eclipse-temurin:19-jre"
