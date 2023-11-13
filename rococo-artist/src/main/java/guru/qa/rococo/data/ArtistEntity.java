@@ -1,10 +1,14 @@
 package guru.qa.rococo.data;
 
+import guru.qa.grpc.rococo.grpc.AddArtistRequest;
+import guru.qa.grpc.rococo.grpc.ArtistResponse;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.google.protobuf.ByteString.copyFromUtf8;
 
 @Entity
 @Table(name = "artist")
@@ -54,6 +58,22 @@ public class ArtistEntity {
 
     public void setPhoto(byte[] photo) {
         this.photo = photo;
+    }
+
+    public static ArtistEntity fromGrpcMessage(AddArtistRequest request) {
+        ArtistEntity entity = new ArtistEntity();
+        entity.setName(request.getName());
+        entity.setBiography(request.getBiography());
+        entity.setPhoto(request.getPhoto().toByteArray());
+        return entity;
+    }
+
+    public static ArtistResponse toGrpcMessage(ArtistEntity entity) {
+        return ArtistResponse.newBuilder()
+                .setId(copyFromUtf8(entity.getId().toString()))
+                .setName(entity.getName())
+                .setBiography(entity.getBiography())
+                .build();
     }
 
     @Override

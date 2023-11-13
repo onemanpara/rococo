@@ -1,7 +1,9 @@
 package guru.qa.rococo.service.api;
 
+import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.*;
 import guru.qa.rococo.model.ArtistJson;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
 import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
@@ -29,30 +31,33 @@ public class GrpcArtistClient {
     private RococoArtistServiceGrpc.RococoArtistServiceBlockingStub rococoArtistServiceStub;
 
     public @Nonnull ArtistJson getArtist(UUID id) {
-        GetArtistRequest request = GetArtistRequest.newBuilder()
-                .setUuid(copyFromUtf8(id.toString()))
+        ArtistRequest request = ArtistRequest.newBuilder()
+                .setId(copyFromUtf8(id.toString()))
                 .build();
-
         try {
-            GetArtistResponse response = rococoArtistServiceStub.getArtist(request);
+            ArtistResponse response = rococoArtistServiceStub.getArtist(request);
             return ArtistJson.fromGrpcMessage(response);
         } catch (StatusRuntimeException e) {
-            LOG.error("### Error while calling gRPC server ", e);
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
+            if (e.getStatus().getCode() == Status.Code.NOT_FOUND) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Запрашиваемый художник с id " + id + " не найден", e);
+            } else {
+                LOG.error("### Error while calling gRPC server ", e);
+                throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
+            }
         }
     }
 
     public @Nonnull Page<ArtistJson> getAllArtist(@Nullable String name, Pageable pageable) {
-        GetArtistsWithPaginationRequest.Builder builder = GetArtistsWithPaginationRequest.newBuilder()
+        GetAllArtistRequest.Builder builder = GetAllArtistRequest.newBuilder()
                 .setPage(pageable.getPageNumber())
                 .setSize(pageable.getPageSize());
         if (name != null) {
             builder.setName(name);
         }
-        GetArtistsWithPaginationRequest request = builder.build();
+        GetAllArtistRequest request = builder.build();
 
         try {
-            GetArtistsWithPaginationResponse response = rococoArtistServiceStub.getArtistsWithPagination(request);
+            GetAllArtistResponse response = rococoArtistServiceStub.getAllArtist(request);
             List<ArtistJson> artistJsonList = response.getArtistsList()
                     .stream()
                     .map(ArtistJson::fromGrpcMessage)
@@ -62,6 +67,22 @@ public class GrpcArtistClient {
             LOG.error("### Error while calling gRPC server ", e);
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
         }
+    }
+
+    public @Nonnull ArtistJson addArtist(ArtistJson artist) {
+        AddArtistRequest request = ArtistJson.toGrpcMessage(artist);
+        ArtistResponse response = rococoArtistServiceStub.addArtist(request);
+        return ArtistJson.fromGrpcMessage(response);
+    }
+
+    public @Nonnull ArtistJson updateArtist(ArtistJson artist) {
+        AddArtistRequest artistData = ArtistJson.toGrpcMessage(artist);
+        UpdateArtistRequest request = UpdateArtistRequest.newBuilder()
+                .setId(ByteString.copyFromUtf8(artist.id().toString()))
+                .setArtistData(artistData)
+                .build();
+        ArtistResponse response = rococoArtistServiceStub.updateArtist(request);
+        return ArtistJson.fromGrpcMessage(response);
     }
 
 }

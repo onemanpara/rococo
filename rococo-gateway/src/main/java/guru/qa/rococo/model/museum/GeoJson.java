@@ -9,7 +9,6 @@ import java.util.Objects;
 import static com.google.protobuf.ByteString.copyFromUtf8;
 
 public class GeoJson {
-
     @JsonProperty("city")
     private String city;
     @JsonProperty("country")

@@ -118,7 +118,7 @@ services:
     container_name: geo.rococo.dc
     image: onemanpara/rococo-geo:latest
     expose:
-      - "8096"
+      - "8094"
     restart: always
     depends_on:
       rococo-all-db:

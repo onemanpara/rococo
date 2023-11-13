@@ -10,7 +10,7 @@ export const validateForm = (
             ...prevState,
             name: name?.length < 3
                 ? Errors.NAME_LENGTH_CONSTRAINT_MIN
-                : name?.length > 255
+                : name?.length > 30
                     ? Errors.NAME_LENGTH_CONSTRAINT_MAX
                     : "",
             biography: biography?.length < 11

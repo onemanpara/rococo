@@ -1,8 +1,6 @@
-server:
-  port: 8089
-  error:
-    include:
-      message: true
+grpc:
+  server:
+    port: 8091
 
 spring:
   application:

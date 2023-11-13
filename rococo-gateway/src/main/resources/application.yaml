@@ -28,24 +28,21 @@ spring:
 
 grpc:
   client:
+    grpcUserdataClient:
+      address: 'static://localhost:8091'
+      negotiationType: PLAINTEXT
     grpcArtistClient:
       address: 'static://localhost:8092'
       negotiationType: PLAINTEXT
     grpcMuseumClient:
-      address: 'static://localhost:8094'
+      address: 'static://localhost:8093'
       negotiationType: PLAINTEXT
     grpcCountryClient:
-      address: 'static://localhost:8096'
+      address: 'static://localhost:8094'
       negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'http://127.0.0.1:3000'
-rococo-userdata:
-  base-uri: 'http://127.0.0.1:8089'
-rococo-artist:
-  base-uri: 'http://127.0.0.1:8091'
-rococo-museum:
-  base-uri: 'http://127.0.0.1:8093'
 ---
 spring:
   config:
@@ -59,22 +56,19 @@ spring:
 
 grpc:
   client:
+    grpcUserdataClient:
+      address: 'static://userdata.rococo.dc:8091'
+      negotiationType: PLAINTEXT
     grpcArtistClient:
       address: 'static://artist.rococo.dc:8092'
       negotiationType: PLAINTEXT
     grpcMuseumClient:
-      address: 'static://museum.rococo.dc:8094'
+      address: 'static://museum.rococo.dc:8093'
       negotiationType: PLAINTEXT
     grpcCountryClient:
-      address: 'static://geo.rococo.dc:8096'
+      address: 'static://geo.rococo.dc:8094'
       negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'http://client.rococo.dc'
-rococo-userdata:
-  base-uri: 'http://userdata.rococo.dc:8089'
-rococo-artist:
-  base-uri: 'http://artist.rococo.dc:8091'
-rococo-museum:
-  base-uri: 'http://museum.rococo.dc:8093'
 ---

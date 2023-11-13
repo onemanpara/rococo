@@ -76,7 +76,7 @@ public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServi
 
     @Override
     public void addMuseum(AddMuseumRequest addMuseumRequest, StreamObserver<MuseumResponse> responseObserver) {
-        MuseumEntity entity = museumRepository.save(MuseumEntity.fromAddGrpcMessage(addMuseumRequest));
+        MuseumEntity entity = museumRepository.save(MuseumEntity.fromGrpcMessage(addMuseumRequest));
         responseObserver.onNext(MuseumEntity.toGrpcMessage(entity));
         responseObserver.onCompleted();
     }

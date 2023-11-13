@@ -1,10 +1,14 @@
 package guru.qa.rococo.data;
 
+import com.google.protobuf.ByteString;
+import guru.qa.grpc.rococo.grpc.UserResponse;
 import jakarta.persistence.*;
 
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.google.protobuf.ByteString.copyFromUtf8;
 
 @Entity
 @Table(name = "\"user\"")
@@ -66,6 +70,25 @@ public class UserEntity {
     public void setAvatar(byte[] avatar) {
         this.avatar = avatar;
     }
+
+    public static UserResponse toGrpcMessage(UserEntity entity) {
+        UserResponse.Builder builder = UserResponse.newBuilder()
+                .setId(copyFromUtf8(entity.getId().toString()))
+                .setUsername(entity.getUsername());
+
+        if (entity.getFirstname() != null) {
+            builder.setFirstname(entity.getFirstname());
+        }
+        if (entity.getLastname() != null) {
+            builder.setLastname(entity.getLastname());
+        }
+        if (entity.getAvatar() != null) {
+            builder.setAvatar(ByteString.copyFrom(entity.getAvatar()));
+        }
+
+        return builder.build();
+    }
+
 
     @Override
     public boolean equals(Object o) {

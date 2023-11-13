@@ -1,6 +1,6 @@
 grpc:
   server:
-    port: 8094
+    port: 8093
 
 spring:
   application:

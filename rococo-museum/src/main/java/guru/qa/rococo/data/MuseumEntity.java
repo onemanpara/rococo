@@ -85,7 +85,7 @@ public class MuseumEntity {
         this.geoId = geoId;
     }
 
-    public static MuseumEntity fromAddGrpcMessage(AddMuseumRequest request) {
+    public static MuseumEntity fromGrpcMessage(AddMuseumRequest request) {
         MuseumEntity entity = new MuseumEntity();
         entity.setTitle(request.getTitle());
         entity.setDescription(request.getDescription());
