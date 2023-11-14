@@ -48,7 +48,7 @@ public class GrpcCountryClient {
         }
     }
 
-    public @Nonnull CountryJson getCountryById(UUID id) {
+    @Nonnull CountryJson getCountryById(UUID id) {
         CountryId request = CountryId.newBuilder()
                 .setId(copyFromUtf8(id.toString()))
                 .build();

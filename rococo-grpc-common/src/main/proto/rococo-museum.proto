@@ -14,6 +14,7 @@ service RococoMuseumService {
   rpc GetAllMuseum(AllMuseumRequest) returns (AllMuseumResponse);
   rpc AddMuseum(AddMuseumRequest) returns (MuseumResponse);
   rpc UpdateMuseum(UpdateMuseumRequest) returns (MuseumResponse);
+  rpc GetMuseumByIds(MuseumIdsRequest) returns (AllMuseumByIdsResponse);
 }
 
 message MuseumRequest {
@@ -54,4 +55,12 @@ message UpdateMuseumRequest {
 message Geo {
   string city = 1;
   CountryId country = 2;
+}
+
+message MuseumIdsRequest {
+  repeated bytes id = 1;
+}
+
+message AllMuseumByIdsResponse {
+  repeated MuseumResponse museum = 1;
 }

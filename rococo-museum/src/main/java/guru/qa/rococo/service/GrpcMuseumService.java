@@ -1,6 +1,5 @@
 package guru.qa.rococo.service;
 
-import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.*;
 import guru.qa.rococo.data.MuseumEntity;
 import guru.qa.rococo.data.repository.MuseumRepository;
@@ -9,7 +8,10 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static io.grpc.Status.NOT_FOUND;
 import static java.util.UUID.fromString;
@@ -30,19 +32,12 @@ public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServi
         museumRepository.findById(museumId)
                 .ifPresentOrElse(
                         museumEntity -> {
-                            MuseumResponse response = MuseumResponse.newBuilder()
-                                    .setId(ByteString.copyFromUtf8(museumEntity.getId().toString()))
-                                    .setTitle(museumEntity.getTitle())
-                                    .setDescription(museumEntity.getDescription())
-                                    .setPhoto(ByteString.copyFrom(museumEntity.getPhoto()))
-                                    .setGeo(getGeoFromEntity(museumEntity))
-                                    .build();
-
+                            MuseumResponse response = MuseumEntity.toGrpcMessage(museumEntity);
                             responseObserver.onNext(response);
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(
-                                NOT_FOUND.withDescription("Can't find museum by id: " + museumId)
+                                NOT_FOUND.withDescription("Museum not found by id: " + museumId)
                                         .asRuntimeException()
                         )
                 );
@@ -59,14 +54,8 @@ public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServi
 
         AllMuseumResponse.Builder responseBuilder = AllMuseumResponse.newBuilder();
         museumPage.forEach(museumEntity -> {
-            MuseumResponse museumResponse = MuseumResponse.newBuilder()
-                    .setId(ByteString.copyFromUtf8(museumEntity.getId().toString()))
-                    .setTitle(museumEntity.getTitle())
-                    .setDescription(museumEntity.getDescription())
-                    .setPhoto(ByteString.copyFrom(museumEntity.getPhoto()))
-                    .setGeo(getGeoFromEntity(museumEntity))
-                    .build();
-            responseBuilder.addMuseum(museumResponse);
+            MuseumResponse response = MuseumEntity.toGrpcMessage(museumEntity);
+            responseBuilder.addMuseum(response);
         });
         responseBuilder.setTotalCount((int) museumPage.getTotalElements());
 
@@ -89,26 +78,33 @@ public class GrpcMuseumService extends RococoMuseumServiceGrpc.RococoMuseumServi
                 .ifPresentOrElse(
                         museumEntity -> {
                             AddMuseumRequest museumData = request.getMuseumData();
-                            museumEntity.setTitle(museumData.getTitle());
-                            museumEntity.setDescription(museumData.getDescription());
-                            museumEntity.setPhoto(museumData.getPhoto().toByteArray());
-                            museumEntity.setCity(museumData.getGeo().getCity());
-                            museumEntity.setGeoId(UUID.fromString(museumData.getGeo().getCountry().getId().toStringUtf8()));
+                            MuseumEntity.fromGrpcMessage(museumData);
                             museumRepository.save(museumEntity);
                             responseObserver.onNext(MuseumEntity.toGrpcMessage(museumEntity));
                             responseObserver.onCompleted();
                         }, () -> responseObserver.onError(
-                                NOT_FOUND.withDescription("Can't find museum by id: " + museumId)
+                                NOT_FOUND.withDescription("Museum not found by id: " + museumId)
                                         .asRuntimeException()
                         )
                 );
     }
 
-    private Geo getGeoFromEntity(MuseumEntity museum) {
-        return Geo.newBuilder()
-                .setCity(museum.getCity())
-                .setCountry(CountryId.newBuilder().setId(ByteString.copyFromUtf8(museum.getGeoId().toString())))
-                .build();
+    @Override
+    public void getMuseumByIds(MuseumIdsRequest request, StreamObserver<AllMuseumByIdsResponse> responseObserver) {
+        Set<UUID> museumIds = request.getIdList().stream()
+                .map(byteString -> fromString(byteString.toStringUtf8()))
+                .collect(Collectors.toSet());
+
+        List<MuseumEntity> museums = museumRepository.findAllByIdIn(museumIds);
+
+        AllMuseumByIdsResponse.Builder responseBuilder = AllMuseumByIdsResponse.newBuilder();
+        museums.forEach(museumEntity -> {
+            MuseumResponse response = MuseumEntity.toGrpcMessage(museumEntity);
+            responseBuilder.addMuseum(response);
+        });
+
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
     }
 
 }

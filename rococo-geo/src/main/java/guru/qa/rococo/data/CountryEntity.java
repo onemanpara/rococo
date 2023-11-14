@@ -1,5 +1,7 @@
 package guru.qa.rococo.data;
 
+import com.google.protobuf.ByteString;
+import guru.qa.grpc.rococo.grpc.CountryResponse;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -31,6 +33,13 @@ public class CountryEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public static CountryResponse toGrpcMessage(CountryEntity entity) {
+        return CountryResponse.newBuilder()
+                .setId(ByteString.copyFromUtf8(entity.getId().toString()))
+                .setName(entity.getName())
+                .build();
     }
 
     @Override

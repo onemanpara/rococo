@@ -104,6 +104,23 @@ public class GrpcMuseumClient {
         return addedMuseum;
     }
 
+    @Nonnull
+    List<MuseumJson> getMuseumByIds(Set<UUID> museumIds) {
+        MuseumIdsRequest.Builder requestBuilder = MuseumIdsRequest.newBuilder();
+        museumIds.forEach(museumId -> requestBuilder.addId(ByteString.copyFromUtf8(museumId.toString())));
+        MuseumIdsRequest request = requestBuilder.build();
+        try {
+            AllMuseumByIdsResponse response = rococoMuseumServiceStub.getMuseumByIds(request);
+            return response.getMuseumList()
+                    .stream()
+                    .map(MuseumJson::fromGrpcMessage)
+                    .toList();
+        } catch (StatusRuntimeException e) {
+            LOG.error("### Error while calling gRPC server", e);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
+        }
+    }
+
     private void enrichMuseumWithCountry(MuseumJson museum) {
         CountryJson country = grpcCountryClient.getCountryById(museum.geo().getCountry().id());
         museum.geo().setCountry(country);

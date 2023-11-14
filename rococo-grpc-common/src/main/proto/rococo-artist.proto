@@ -13,6 +13,7 @@ service RococoArtistService {
   rpc GetAllArtist(GetAllArtistRequest) returns (GetAllArtistResponse);
   rpc AddArtist(AddArtistRequest) returns (ArtistResponse);
   rpc UpdateArtist(UpdateArtistRequest) returns (ArtistResponse);
+  rpc GetArtistByIds(ArtistIdsRequest) returns (AllArtistByIdsResponse);
 }
 
 message ArtistRequest {
@@ -46,4 +47,13 @@ message AddArtistRequest {
 message UpdateArtistRequest {
   bytes id = 1;
   AddArtistRequest artistData = 2;
+}
+
+
+message ArtistIdsRequest {
+  repeated bytes id = 1;
+}
+
+message AllArtistByIdsResponse {
+  repeated ArtistResponse artist = 1;
 }
