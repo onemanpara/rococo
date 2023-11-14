@@ -1,6 +1,5 @@
 package guru.qa.rococo.service;
 
-import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.*;
 import guru.qa.rococo.data.CountryEntity;
 import guru.qa.rococo.data.repository.CountryRepository;
@@ -32,15 +31,12 @@ public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountrySe
         countryRepository.findById(countryId)
                 .ifPresentOrElse(
                         countryEntity -> {
-                            CountryResponse response = CountryResponse.newBuilder()
-                                    .setId(ByteString.copyFromUtf8(countryEntity.getId().toString()))
-                                    .setName(countryEntity.getName())
-                                    .build();
+                            CountryResponse response = CountryEntity.toGrpcMessage(countryEntity);
                             responseObserver.onNext(response);
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(
-                                NOT_FOUND.withDescription("Can't find country by id: " + countryId)
+                                NOT_FOUND.withDescription("Country not found by id: " + countryId)
                                         .asRuntimeException()
                         )
                 );
@@ -55,8 +51,8 @@ public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountrySe
         Page<CountryEntity> countryPage = countryRepository.findAll(pageable);
         AllCountryResponse.Builder responseBuilder = AllCountryResponse.newBuilder();
         countryPage.forEach(countryEntity -> {
-            CountryResponse country = getCountryFromEntity(countryEntity);
-            responseBuilder.addCountry(country);
+            CountryResponse response = CountryEntity.toGrpcMessage(countryEntity);
+            responseBuilder.addCountry(response);
         });
         responseBuilder.setTotalCount((int) countryPage.getTotalElements());
 
@@ -74,24 +70,12 @@ public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountrySe
 
         AllCountryByIdsResponse.Builder responseBuilder = AllCountryByIdsResponse.newBuilder();
         countries.forEach(countryEntity -> {
-            CountryResponse countryResponse = CountryResponse.newBuilder()
-                    .setId(ByteString.copyFromUtf8(countryEntity.getId().toString()))
-                    .setName(countryEntity.getName())
-                    .build();
-
-            responseBuilder.addCountry(countryResponse);
+            CountryResponse response = CountryEntity.toGrpcMessage(countryEntity);
+            responseBuilder.addCountry(response);
         });
 
         responseObserver.onNext(responseBuilder.build());
         responseObserver.onCompleted();
-    }
-
-
-    private CountryResponse getCountryFromEntity(CountryEntity country) {
-        return CountryResponse.newBuilder()
-                .setId(ByteString.copyFromUtf8(country.getId().toString()))
-                .setName(country.getName())
-                .build();
     }
 
 }

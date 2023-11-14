@@ -54,7 +54,7 @@
                 description,
                 content,
                 artist: {
-                    id: painting?.artist?.id ?? authorId,
+                    id: authorId,
                 },
                 museum: {
                     id: museumId,

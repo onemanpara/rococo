@@ -1,6 +1,5 @@
 package guru.qa.rococo.service;
 
-import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.*;
 import guru.qa.rococo.data.ArtistEntity;
 import guru.qa.rococo.data.repository.ArtistRepository;
@@ -9,7 +8,10 @@ import net.devh.boot.grpc.server.service.GrpcService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static io.grpc.Status.NOT_FOUND;
 import static java.util.UUID.fromString;
@@ -30,18 +32,12 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
         artistRepository.findById(artistId)
                 .ifPresentOrElse(
                         artistEntity -> {
-                            ArtistResponse response = ArtistResponse.newBuilder()
-                                    .setName(artistEntity.getName())
-                                    .setBiography(artistEntity.getBiography())
-                                    .setPhoto(ByteString.copyFrom(artistEntity.getPhoto()))
-                                    .setId(ByteString.copyFromUtf8(artistEntity.getId().toString()))
-                                    .build();
-
-                            responseObserver.onNext(response);
+                            ArtistResponse artistResponse = ArtistEntity.toGrpcMessage(artistEntity);
+                            responseObserver.onNext(artistResponse);
                             responseObserver.onCompleted();
                         },
                         () -> responseObserver.onError(
-                                NOT_FOUND.withDescription("Can't find artist by id: " + artistId)
+                                NOT_FOUND.withDescription("Artist not found by id: " + artistId)
                                         .asRuntimeException()
                         )
                 );
@@ -52,21 +48,15 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
         String name = request.getName();
         int page = request.getPage();
         int size = request.getSize();
-
         PageRequest pageable = PageRequest.of(page, size);
 
         Page<ArtistEntity> artistPage = artistRepository.findAllByNameContainsIgnoreCase(name, pageable);
 
         GetAllArtistResponse.Builder responseBuilder = GetAllArtistResponse.newBuilder();
-        for (ArtistEntity artist : artistPage) {
-            ArtistResponse artistResponse = ArtistResponse.newBuilder()
-                    .setName(artist.getName())
-                    .setBiography(artist.getBiography())
-                    .setPhoto(ByteString.copyFrom(artist.getPhoto()))
-                    .setId(ByteString.copyFromUtf8(artist.getId().toString()))
-                    .build();
+        artistPage.forEach(artistEntity -> {
+            ArtistResponse artistResponse = ArtistEntity.toGrpcMessage(artistEntity);
             responseBuilder.addArtists(artistResponse);
-        }
+        });
         responseBuilder.setTotalCount((int) artistPage.getTotalElements());
 
         responseObserver.onNext(responseBuilder.build());
@@ -94,10 +84,29 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
                             responseObserver.onNext(ArtistEntity.toGrpcMessage(artistEntity));
                             responseObserver.onCompleted();
                         }, () -> responseObserver.onError(
-                                NOT_FOUND.withDescription("Can't find artist by id: " + artistId)
+                                NOT_FOUND.withDescription("Artist not found by id: " + artistId)
                                         .asRuntimeException()
                         )
                 );
+    }
+
+
+    @Override
+    public void getArtistByIds(ArtistIdsRequest request, StreamObserver<AllArtistByIdsResponse> responseObserver) {
+        Set<UUID> artistIds = request.getIdList().stream()
+                .map(byteString -> fromString(byteString.toStringUtf8()))
+                .collect(Collectors.toSet());
+
+        List<ArtistEntity> artists = artistRepository.findAllByIdIn(artistIds);
+
+        AllArtistByIdsResponse.Builder responseBuilder = AllArtistByIdsResponse.newBuilder();
+        artists.forEach(artistEntity -> {
+            ArtistResponse artistResponse = ArtistEntity.toGrpcMessage(artistEntity);
+            responseBuilder.addArtist(artistResponse);
+        });
+
+        responseObserver.onNext(responseBuilder.build());
+        responseObserver.onCompleted();
     }
 
 }

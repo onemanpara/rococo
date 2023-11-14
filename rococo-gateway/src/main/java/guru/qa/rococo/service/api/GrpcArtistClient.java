@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.google.protobuf.ByteString.copyFromUtf8;
@@ -83,6 +84,23 @@ public class GrpcArtistClient {
                 .build();
         ArtistResponse response = rococoArtistServiceStub.updateArtist(request);
         return ArtistJson.fromGrpcMessage(response);
+    }
+
+    @Nonnull
+    List<ArtistJson> getArtistByIds(Set<UUID> museumIds) {
+        ArtistIdsRequest.Builder requestBuilder = ArtistIdsRequest.newBuilder();
+        museumIds.forEach(museumId -> requestBuilder.addId(ByteString.copyFromUtf8(museumId.toString())));
+        ArtistIdsRequest request = requestBuilder.build();
+        try {
+            AllArtistByIdsResponse response = rococoArtistServiceStub.getArtistByIds(request);
+            return response.getArtistList()
+                    .stream()
+                    .map(ArtistJson::fromGrpcMessage)
+                    .toList();
+        } catch (StatusRuntimeException e) {
+            LOG.error("### Error while calling gRPC server", e);
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "The gRPC operation was cancelled", e);
+        }
     }
 
 }

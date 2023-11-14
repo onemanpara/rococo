@@ -40,6 +40,9 @@ grpc:
     grpcCountryClient:
       address: 'static://localhost:8094'
       negotiationType: PLAINTEXT
+    grpcPaintingClient:
+      address: 'static://localhost:8095'
+      negotiationType: PLAINTEXT
 
 rococo-front:
   base-uri: 'http://127.0.0.1:3000'
@@ -67,6 +70,9 @@ grpc:
       negotiationType: PLAINTEXT
     grpcCountryClient:
       address: 'static://geo.rococo.dc:8094'
+      negotiationType: PLAINTEXT
+    grpcPaintingClient:
+      address: 'static://painting.rococo.dc:8095'
       negotiationType: PLAINTEXT
 
 rococo-front:
