@@ -28,8 +28,8 @@ public class PaintingController {
     }
 
     @GetMapping
-    public Page<PaintingJson> getAll(@RequestParam(required = false) String name, @PageableDefault Pageable pageable) {
-        return grpcPaintingClient.getAllPainting(name, pageable);
+    public Page<PaintingJson> getAll(@RequestParam(required = false) String title, @PageableDefault Pageable pageable) {
+        return grpcPaintingClient.getAllPainting(title, pageable);
     }
 
     @PostMapping
