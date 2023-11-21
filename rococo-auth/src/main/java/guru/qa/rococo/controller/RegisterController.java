@@ -47,7 +47,7 @@ public class RegisterController {
 
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
-        model.addAttribute(MODEL_REG_FORM_ATTR, new RegistrationModel());
+        model.addAttribute(MODEL_REG_FORM_ATTR, new RegistrationModel(null, null, null));
         model.addAttribute(MODEL_FRONT_URI_ATTR, rococoFrontUri + "/redirect");
         return REGISTRATION_VIEW_NAME;
     }
@@ -61,22 +61,21 @@ public class RegisterController {
             final String registeredUserName;
             try {
                 registeredUserName = userService.registerUser(
-                        registrationModel.getUsername(),
-                        registrationModel.getPassword()
+                        registrationModel.username(),
+                        registrationModel.password()
                 );
                 response.setStatus(HttpServletResponse.SC_CREATED);
                 model.addAttribute(MODEL_USERNAME_ATTR, registeredUserName);
 
-                UserJson user = new UserJson();
-                user.setUsername(registrationModel.getUsername());
+                UserJson user = new UserJson(registrationModel.username());
                 kafkaTemplate.send("users", user);
-                LOG.info("### Kafka topic [users] sent message: " + user.getUsername());
+                LOG.info("### Kafka topic [users] sent message: " + user.username());
             } catch (DataIntegrityViolationException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 addErrorToRegistrationModel(
                         registrationModel,
                         model,
-                        "username", "Имя пользователя `" + registrationModel.getUsername() + "` занято"
+                        "username", "Имя пользователя `" + registrationModel.username() + "` занято"
                 );
             }
         } else {

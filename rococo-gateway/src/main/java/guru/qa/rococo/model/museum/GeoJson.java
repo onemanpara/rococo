@@ -3,37 +3,23 @@ package guru.qa.rococo.model.museum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import guru.qa.grpc.rococo.grpc.CountryId;
 import guru.qa.grpc.rococo.grpc.Geo;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Objects;
 
 import static com.google.protobuf.ByteString.copyFromUtf8;
 
+@Getter
+@Setter
+@AllArgsConstructor
 public class GeoJson {
+
     @JsonProperty("city")
     private String city;
     @JsonProperty("country")
     private CountryJson country;
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public CountryJson getCountry() {
-        return country;
-    }
-
-    public void setCountry(CountryJson country) {
-        this.country = country;
-    }
-
-    public GeoJson(String city, CountryJson country) {
-        this.city = city;
-        this.country = country;
-    }
 
     public static Geo toGrpcMessage(GeoJson geo) {
         CountryId country = CountryId.newBuilder()

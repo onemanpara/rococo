@@ -7,7 +7,6 @@ public record SessionJson(
         Instant issuedAt,
         Instant expiresAt
 ) {
-
     public static SessionJson emptySession() {
         return new SessionJson(null, null, null);
     }

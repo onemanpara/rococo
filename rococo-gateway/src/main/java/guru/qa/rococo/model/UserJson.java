@@ -20,7 +20,6 @@ public record UserJson(
         @JsonProperty("avatar")
         String avatar
 ) {
-
     public static UserJson fromGrpcMessage(UserResponse response) {
         return new UserJson(
                 UUID.fromString(response.getId().toStringUtf8()),

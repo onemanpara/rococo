@@ -3,15 +3,19 @@ package guru.qa.rococo.data;
 import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.UserResponse;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
 import static com.google.protobuf.ByteString.copyFromUtf8;
 
+@Getter
+@Setter
 @Entity
-@Table(name = "\"user\"")
+@Table(name = "user")
 public class UserEntity {
 
     @Id
@@ -31,46 +35,6 @@ public class UserEntity {
     @Column(name = "avatar", columnDefinition = "bytea")
     private byte[] avatar;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public byte[] getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(byte[] avatar) {
-        this.avatar = avatar;
-    }
-
     public static UserResponse toGrpcMessage(UserEntity entity) {
         UserResponse.Builder builder = UserResponse.newBuilder()
                 .setId(copyFromUtf8(entity.getId().toString()))
@@ -89,20 +53,19 @@ public class UserEntity {
         return builder.build();
     }
 
-
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
         UserEntity that = (UserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(username, that.username) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Arrays.equals(avatar, that.avatar);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
-        int result = Objects.hash(id, username, firstname, lastname);
-        result = 31 * result + Arrays.hashCode(avatar);
-        return result;
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
-
 }

@@ -3,10 +3,16 @@ package guru.qa.rococo.data;
 import com.google.protobuf.ByteString;
 import guru.qa.grpc.rococo.grpc.CountryResponse;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
 import java.util.UUID;
 
+
+@Getter
+@Setter
 @Entity
 @Table(name = "country")
 public class CountryEntity {
@@ -19,22 +25,6 @@ public class CountryEntity {
     @Column(nullable = false, unique = true)
     private String name;
 
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public static CountryResponse toGrpcMessage(CountryEntity entity) {
         return CountryResponse.newBuilder()
                 .setId(ByteString.copyFromUtf8(entity.getId().toString()))
@@ -43,15 +33,18 @@ public class CountryEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
         CountryEntity that = (CountryEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }
