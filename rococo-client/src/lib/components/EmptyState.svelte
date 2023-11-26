@@ -15,7 +15,7 @@
     <div 
         class={`${fullPage ? "m-20 py-20" : "mb-20 mt-4"} rounded-container-token border-surface-500 text-center`}
         class:border={bordered}>
-        <p class="mx-4 my-10 text-xl">{text}</p>
+        <p class="mx-4 my-10 text-xl" data-testid="emptyState">{text}</p>
         {#if $sessionStore.user}
             <button type="button" class="btn variant-filled-primary ml-4" on:click={onButtonClick}>{buttonName}</button>
         {/if}

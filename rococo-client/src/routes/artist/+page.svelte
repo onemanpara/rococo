@@ -18,7 +18,7 @@
             searchPlaceholder="Искать художников..."
             formComponent={NewArtistForm}
             emptySearchText="Художники не найдены"
-            emptySearchDescription="Для указанного вами фильтра мы не смогли не найти художников"
+            emptySearchDescription="Для указанного вами фильтра мы не смогли найти ни одного художника"
             emptyStateTitle="Пока что список художников пуст. Чтобы пополнить коллекцию, добавьте нового художника"
             dataKey="name"
             successMessage="Добавлен художник"

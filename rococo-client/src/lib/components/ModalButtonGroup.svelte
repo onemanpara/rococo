@@ -7,6 +7,6 @@
 </script>
 
 <div class="text-right">
-    <button class="btn variant-ringed" type="button" on:click={onClose}>{closeButtonText}</button>
+    <button class="btn variant-ringed" type="button" on:click={onClose} data-testid="closeModal">{closeButtonText}</button>
     <button class="btn variant-filled-primary" type="submit">{submitButtonText}</button>
 </div>

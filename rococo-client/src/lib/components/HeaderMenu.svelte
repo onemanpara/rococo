@@ -66,7 +66,7 @@ const clickProfileButton = () => {
             <Avatar src={$sessionStore.user.avatar} width="w-16" rounded="rounded-full" />
         </button>
     {:else}
-        <button type="button" class="btn variant-filled-primary" on:click={onLoginClick}>
+        <button data-testid="loginButton" type="button" class="btn variant-filled-primary" on:click={onLoginClick}>
             Войти
         </button>
     {/if}
