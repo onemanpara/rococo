@@ -65,7 +65,7 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
 
     @Override
     public void addArtist(AddArtistRequest addArtistRequest, StreamObserver<ArtistResponse> responseObserver) {
-        ArtistEntity entity = artistRepository.save(ArtistEntity.fromGrpcMessage(addArtistRequest));
+        ArtistEntity entity = artistRepository.save(ArtistEntity.fromAddArtistGrpcMessage(addArtistRequest));
         responseObserver.onNext(ArtistEntity.toGrpcMessage(entity));
         responseObserver.onCompleted();
     }
@@ -77,9 +77,7 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
         artistRepository.findById(artistId)
                 .ifPresentOrElse(
                         artistEntity -> {
-                            AddArtistRequest artistData = request.getArtistData();
-                            artistEntity.setName(artistData.getName());
-                            artistEntity.setBiography(artistData.getBiography());
+                            artistEntity = ArtistEntity.fromUpdateArtistGrpcMessage(request);
                             artistRepository.save(artistEntity);
                             responseObserver.onNext(ArtistEntity.toGrpcMessage(artistEntity));
                             responseObserver.onCompleted();

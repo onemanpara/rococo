@@ -56,7 +56,7 @@ public class GrpcPaintingService extends RococoPaintingServiceGrpc.RococoPaintin
 
     @Override
     public void addPainting(AddPaintingRequest addPaintingRequest, StreamObserver<PaintingResponse> responseObserver) {
-        PaintingEntity entity = paintingRepository.save(PaintingEntity.fromGrpcMessage(addPaintingRequest));
+        PaintingEntity entity = paintingRepository.save(PaintingEntity.fromAddPaintingGrpcMessage(addPaintingRequest));
         responseObserver.onNext(PaintingEntity.toGrpcMessage(entity));
         responseObserver.onCompleted();
     }
@@ -68,8 +68,8 @@ public class GrpcPaintingService extends RococoPaintingServiceGrpc.RococoPaintin
         paintingRepository.findById(paintingId)
                 .ifPresentOrElse(
                         paintingEntity -> {
-                            AddPaintingRequest museumData = request.getPaintingData();
-                            paintingRepository.save(PaintingEntity.fromGrpcMessage(museumData));
+                            paintingEntity = PaintingEntity.fromUpdatePaintingGrpcMessage(request);
+                            paintingRepository.save(paintingEntity);
                             responseObserver.onNext(PaintingEntity.toGrpcMessage(paintingEntity));
                             responseObserver.onCompleted();
                         }, () -> responseObserver.onError(

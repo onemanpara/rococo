@@ -1,15 +1,12 @@
 package guru.qa.rococo.data;
 
 import com.google.protobuf.ByteString;
-import guru.qa.grpc.rococo.grpc.AddMuseumRequest;
-import guru.qa.grpc.rococo.grpc.CountryId;
-import guru.qa.grpc.rococo.grpc.Geo;
-import guru.qa.grpc.rococo.grpc.MuseumResponse;
+import guru.qa.grpc.rococo.grpc.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.proxy.HibernateProxy;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -41,13 +38,19 @@ public class MuseumEntity {
     @Column(name = "geo_id")
     private UUID geoId;
 
-    public static MuseumEntity fromGrpcMessage(AddMuseumRequest request) {
+    public static MuseumEntity fromAddMuseumGrpcMessage(AddMuseumRequest request) {
         MuseumEntity entity = new MuseumEntity();
         entity.setTitle(request.getTitle());
         entity.setDescription(request.getDescription());
         entity.setCity(request.getGeo().getCity());
         entity.setPhoto(request.getPhoto().toByteArray());
         entity.setGeoId(UUID.fromString(request.getGeo().getCountry().getId().toStringUtf8()));
+        return entity;
+    }
+
+    public static MuseumEntity fromUpdateMuseumGrpcMessage(UpdateMuseumRequest request) {
+        MuseumEntity entity = fromAddMuseumGrpcMessage(request.getMuseumData());
+        entity.setId(UUID.fromString(request.getId().toStringUtf8()));
         return entity;
     }
 
@@ -69,18 +72,17 @@ public class MuseumEntity {
     }
 
     @Override
-    public final boolean equals(Object o) {
+    public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        MuseumEntity that = (MuseumEntity) o;
-        return getId() != null && Objects.equals(getId(), that.getId());
+        if (o == null || getClass() != o.getClass()) return false;
+        MuseumEntity entity = (MuseumEntity) o;
+        return Objects.equals(id, entity.id) && Objects.equals(title, entity.title) && Objects.equals(description, entity.description) && Objects.equals(city, entity.city) && Arrays.equals(photo, entity.photo) && Objects.equals(geoId, entity.geoId);
     }
 
     @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    public int hashCode() {
+        int result = Objects.hash(id, title, description, city, geoId);
+        result = 31 * result + Arrays.hashCode(photo);
+        return result;
     }
 }
