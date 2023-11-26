@@ -18,10 +18,10 @@
 			searchPlaceholder="Искать картины..."
 			formComponent={NewPaintingForm}
 			emptySearchText="Картины не найдены"
-			emptySearchDescription="Для указанного вами фильтра мы не смогли не найти ни одной картины"
+			emptySearchDescription="Для указанного вами фильтра мы не смогли найти ни одной картины"
 			emptyStateTitle="Пока что список картин пуст. Чтобы пополнить коллекцию, добавьте новую картину"
 			dataKey="title"
-			successMessage="Добавлена картины"
+			successMessage="Добавлена картина"
 	>
 		<PaintingList paintings={$paintingsStore.data}/>
 	</CommonPage>

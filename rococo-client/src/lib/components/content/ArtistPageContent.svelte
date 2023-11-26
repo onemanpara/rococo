@@ -158,13 +158,13 @@
                 <button class="btn variant-filled-primary m-3 mx-auto block w-full" type="button" on:click={clickAddButton}>Добавить картину</button>
             {/if}
         </div>
-        <p class="col-span-2 w-4/5 m-2">{$singleArtistStore?.data?.biography}</p>
+        <p class="col-span-2 w-4/5 m-2" data-testid="biography">{$singleArtistStore?.data?.biography}</p>
     </section>
     <section class="p-4">
         <ListWrapper data={$singleArtistStore.paintings}
                      isSearchNotEmpty={false}
                      emptySearchText="Картины не найдены"
-                     emptySearchDescription="Для указанного вами фильтра мы не смогли не найти картины"
+                     emptySearchDescription="Для указанного вами фильтра мы не смогли найти картины"
                      emptyStateTitle="Пока что список картин этого художника пуст."
                      emptyStateButtonName="Добавить картину"
                      noMoreData={$singleArtistStore.noMoreData}

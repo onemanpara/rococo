@@ -28,7 +28,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 m-4 min-h-full">
         <div>
             <header class="card-header text-center font-bold">{$singleMuseumStore.data?.title}</header>
-            <div class="text-center">{$singleMuseumStore.data?.geo.country.name}, {$singleMuseumStore.data?.geo?.city}</div>
+            <div class="text-center" data-testid="geo">{$singleMuseumStore.data?.geo.country.name}, {$singleMuseumStore.data?.geo?.city}</div>
             <div class="w-56 m-3 mx-auto">
                 <EditComponent
                         dataTestId="edit-museum"
@@ -43,8 +43,8 @@
                         dataKey="title"
                 />
             </div>
-            <div>{$singleMuseumStore.data?.description}</div>
+            <div data-testid="description">{$singleMuseumStore.data?.description}</div>
         </div>
-        <img src={$singleMuseumStore.data?.photo} alt={$singleMuseumStore.data?.title} class="my-4 mx-auto w-full"/>
+        <img src={$singleMuseumStore.data?.photo} alt={$singleMuseumStore.data?.title} class="my-4 mx-auto w-full" data-testid="photo"/>
     </div>
 </article>

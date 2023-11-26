@@ -3,10 +3,11 @@
     export let src: string;
     export let altText: string;
     export let linkText: string;
+    export let testId: string;
 </script>
 
 <li>
-    <a href={link}>
+    <a href={link} data-testid={testId}>
         <img class="rounded-lg object-cover w-72 h-96 mx-auto" {src} alt={altText}>
         <div class="text-center text-2xl p-6 text-bold">{linkText}</div>
     </a>

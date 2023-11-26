@@ -20,7 +20,7 @@
 			searchPlaceholder="Искать музей..."
 			formComponent={NewMuseumForm}
 			emptySearchText="Музеи не найдены"
-			emptySearchDescription="Для указанного вами фильтра мы не смогли не найти ни одного музея"
+			emptySearchDescription="Для указанного вами фильтра мы не смогли найти ни одного музея"
 			emptyStateTitle="Пока что список музеев пуст. Чтобы пополнить коллекцию, добавьте новый музей"
 			dataKey="title"
 			successMessage="Добавлен музей"

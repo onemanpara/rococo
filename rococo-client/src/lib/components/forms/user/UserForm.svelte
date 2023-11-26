@@ -79,12 +79,12 @@
     <FormWrapper modalTitle={$modalStore[0].title ?? ""} modalBody={$modalStore[0].body ?? ""}>
         <form class="modal-form space-y-4 relative" on:submit={onSubmit}>
             <div class="text-right absolute right-0">
-                <button type="button" class="btn variant-ghost" on:click={onLogoutClick}>
+                <button type="button" class="btn variant-ghost" data-testid="logout" on:click={onLogoutClick}>
                     Выйти
                 </button>
             </div>
             <Avatar class="mx-auto" src={avatar} width="w-48" rounded="rounded-full" />
-            <h4 class="text-center">@{username}</h4>
+            <h4 class="text-center" data-testid="username">@{username}</h4>
             <ImageInput
                     label="Обновить фото профиля"
                     name="content"
