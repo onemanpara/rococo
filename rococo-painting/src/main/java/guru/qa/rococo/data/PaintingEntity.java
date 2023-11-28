@@ -29,7 +29,7 @@ public class PaintingEntity {
     @Column(nullable = false)
     private String description;
 
-    @Column(columnDefinition = "bytea")
+    @Column(columnDefinition = "bytea", nullable = false)
     private byte[] content;
 
     @Column(name = "museum_id", nullable = false, length = 36)

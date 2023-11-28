@@ -20,7 +20,7 @@
     {/if}
 </div>
 
-<div class="flex justify-center mb-4 mx-8">
+<div class="flex justify-center mb-4 mx-8" data-testid="searchComponent">
     <input class="input" bind:value={search} title={searchPlaceholder} type="search" placeholder={searchPlaceholder} data-testid="searchInput" on:keypress={(evt) => {
         if(evt.key === "Enter") {
             loadFunction(search);

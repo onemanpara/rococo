@@ -45,6 +45,6 @@
             </div>
             <div data-testid="description">{$singleMuseumStore.data?.description}</div>
         </div>
-        <img src={$singleMuseumStore.data?.photo} alt={$singleMuseumStore.data?.title} class="my-4 mx-auto w-full" data-testid="photo"/>
+        <img src={$singleMuseumStore.data?.photo} alt={$singleMuseumStore.data?.title} class="my-4 mx-auto w-full" data-testid="museumPhoto"/>
     </div>
 </article>

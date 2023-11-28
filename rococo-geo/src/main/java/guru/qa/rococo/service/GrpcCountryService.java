@@ -43,6 +43,24 @@ public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountrySe
     }
 
     @Override
+    public void getCountryByName(CountryName request, StreamObserver<CountryResponse> responseObserver) {
+        String countryName = request.getName();
+
+        countryRepository.findByName(countryName)
+                .ifPresentOrElse(
+                        countryEntity -> {
+                            CountryResponse response = CountryEntity.toGrpcMessage(countryEntity);
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                        },
+                        () -> responseObserver.onError(
+                                NOT_FOUND.withDescription("Country not found by name: " + countryName)
+                                        .asRuntimeException()
+                        )
+                );
+    }
+
+    @Override
     public void getAllCountry(AllCountryRequest request, StreamObserver<AllCountryResponse> responseObserver) {
         int page = request.getPage();
         int size = request.getSize();

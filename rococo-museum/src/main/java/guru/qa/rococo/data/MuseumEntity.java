@@ -26,16 +26,16 @@ public class MuseumEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "text")
+    @Column(name = "description", columnDefinition = "text", nullable = false)
     private String description;
 
     @Column(nullable = false)
     private String city;
 
-    @Column(name = "photo", columnDefinition = "bytea")
+    @Column(name = "photo", columnDefinition = "bytea", nullable = false)
     private byte[] photo;
 
-    @Column(name = "geo_id")
+    @Column(name = "geo_id", nullable = false)
     private UUID geoId;
 
     public static MuseumEntity fromAddMuseumGrpcMessage(AddMuseumRequest request) {

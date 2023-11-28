@@ -8,12 +8,12 @@ export const validateForm = (
     userFormErrorStore.update((prevState) => {
         return {
             ...prevState,
-            firstname: firstname?.length > 30
-                    ? Errors.NAME_LENGTH_CONSTRAINT_MAX
-                    : "",
-            lastname: lastname?.length > 30
-                    ? Errors.SURNAME_LENGTH_CONSTRAINT_MAX
-                    : "",
+            firstname: firstname?.length > 50
+                ? Errors.NAME_LENGTH_CONSTRAINT_MAX
+                : "",
+            lastname: lastname?.length > 50
+                ? Errors.SURNAME_LENGTH_CONSTRAINT_MAX
+                : "",
         }
     });
 }

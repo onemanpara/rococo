@@ -138,7 +138,7 @@
     <header class="card-header text-center font-bold text-2xl">{$singleArtistStore?.data?.name}</header>
     <section class="p-4 grid grid-cols-1 lg:grid-cols-3 justify-items-center">
         <div class="flex flex-col">
-            <Avatar src={$singleArtistStore?.data?.photo} width="w-56" rounded="rounded-full" class="col-span-1"/>
+            <Avatar src={$singleArtistStore?.data?.photo} width="w-56" rounded="rounded-full" class="col-span-1" data-testid="artistPhoto"/>
             {#if $sessionStore.user}
                 <EditComponent
                         {errorTrigger}

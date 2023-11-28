@@ -25,10 +25,10 @@ public class ArtistEntity {
     @Column(name = "id", nullable = false, length = 36)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
-    @Column()
+    @Column(nullable = false)
     private String biography;
 
     @Column(name = "photo", columnDefinition = "bytea")
