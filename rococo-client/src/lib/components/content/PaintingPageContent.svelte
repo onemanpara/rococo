@@ -26,11 +26,11 @@
 
 <article class="card m-8 p-4 min-h-[90%]">
     <div class="grid grid-cols-1 lg:grid-cols-2 m-4 min-h-full">
-        <img src={$singlePaintingStore?.data?.content} alt={$singlePaintingStore?.data?.title} class="my-4 mx-auto w-full"/>
+        <img src={$singlePaintingStore?.data?.content} alt={$singlePaintingStore?.data?.title} class="my-4 mx-auto w-full" data-testid="paintingPhoto"/>
         <div>
             <div>
                 <header class="card-header text-center font-bold">{$singlePaintingStore?.data?.title}</header>
-                <div class="text-center">{$singlePaintingStore?.data?.artist?.name}</div>
+                <div class="text-center" data-testid="artist">{$singlePaintingStore?.data?.artist?.name}</div>
                 <div class="w-56 m-3 mx-auto">
                     <EditComponent
                             dataTestId="edit-painting"
@@ -46,7 +46,7 @@
                     />
                 </div>
             </div>
-            <div class="m-4">{$singlePaintingStore?.data?.description}</div>
+            <div class="m-4" data-testid="description">{$singlePaintingStore?.data?.description}</div>
         </div>
     </div>
 </article>

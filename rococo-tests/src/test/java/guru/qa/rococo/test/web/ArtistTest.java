@@ -1,15 +1,17 @@
 package guru.qa.rococo.test.web;
 
 
-import guru.qa.rococo.jupiter.annotation.ApiLogin;
-import guru.qa.rococo.jupiter.annotation.GenerateArtist;
-import guru.qa.rococo.jupiter.annotation.GenerateUser;
+import guru.qa.rococo.jupiter.annotation.*;
 import guru.qa.rococo.model.ArtistJson;
+import guru.qa.rococo.model.MuseumJson;
+import guru.qa.rococo.model.PaintingJson;
 import guru.qa.rococo.page.ArtistDetailPage;
 import guru.qa.rococo.util.DataUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+
+import java.util.UUID;
 
 import static guru.qa.rococo.util.DataUtil.*;
 import static guru.qa.rococo.util.ImageUtil.convertImageToBase64;
@@ -42,24 +44,6 @@ public class ArtistTest extends BaseWebTest {
     }
 
     @Test
-    @DisplayName("WEB: На детальной странице художника отображаются данные из БД")
-    @Tag("WEB")
-    @GenerateArtist
-    void shouldShowArtistDataFromDB(ArtistJson artistJson) {
-        String name = artistJson.getName();
-        String biography = artistJson.getBiography();
-
-        artistListPage
-                .openPage()
-                .waitForPageIsLoaded()
-                .filterArtistByName(name)
-                .openArtistCard(name)
-                .checkName(name)
-                .checkBiography(biography)
-                .checkPhoto(artistJson.getPhoto());
-    }
-
-    @Test
     @DisplayName("WEB: Пользователь может изменить данные о художнике")
     @Tag("WEB")
     @ApiLogin(user = @GenerateUser)
@@ -84,6 +68,51 @@ public class ArtistTest extends BaseWebTest {
                 .checkName(newName)
                 .checkBiography(newBiography)
                 .checkPhoto(convertImageToBase64(NEW_PHOTO_PATH));
+    }
+
+    @Test
+    @DisplayName("WEB: На детальной странице художника отображается картина художника")
+    @Tag("WEB")
+    @GeneratePainting
+    void shouldShowArtistDataFromDB(PaintingJson paintingJson) {
+        UUID artistId = paintingJson.getArtist().getId();
+        ArtistDetailPage artistDetailPage = new ArtistDetailPage(artistId.toString());
+
+        artistDetailPage
+                .openPage()
+                .waitForPageIsLoaded()
+                .openPaintingCard(paintingJson.getTitle())
+                .waitForPageIsLoaded();
+    }
+
+    @Test
+    @DisplayName("WEB: Пользователь может добавить картину со страницы художника. " +
+            "Художник автоматически предустановлен, если картина добавляется с его детальной страницы")
+    @Tag("WEB")
+    @ApiLogin(user = @GenerateUser)
+    @GenerateMuseum
+    @GenerateArtist
+    void shouldAddNewPainting(MuseumJson createdMuseum, ArtistJson createdArtist) {
+        String title = DataUtil.generateRandomPaintingName();
+        String description = generateRandomSentence(30);
+
+        ArtistDetailPage artistDetailPage = new ArtistDetailPage(createdArtist.getId().toString());
+        artistDetailPage
+                .openPage()
+                .waitForPageIsLoaded()
+                .addNewPainting()
+                .checkArtistSelectIsNotExist()
+                .setTitle(title)
+                .setPhoto(PHOTO_PATH)
+                .setDescription(description)
+                .selectMuseum(createdMuseum.getTitle())
+                .successSubmit();
+        artistDetailPage
+                .checkNotificationText("Добавлена картина: " + title)
+                .openPage()
+                .waitForPageIsLoaded()
+                .openPaintingCard(title)
+                .waitForPageIsLoaded();
     }
 
     @Test

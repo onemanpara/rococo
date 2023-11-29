@@ -7,6 +7,7 @@ import guru.qa.rococo.page.component.SearchComponent;
 import guru.qa.rococo.page.component.modal.PaintingModal;
 import io.qameta.allure.Step;
 
+import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -35,12 +36,6 @@ public class PaintingListPage extends BasePage<PaintingListPage> {
         return this;
     }
 
-//    @Step("Open painting card with title: {title}")
-//    public PaintingDetailPage openPaintingCard(String title) {
-//        itemsComponent.getItemCard(title).click();
-//        return new PaintingDetailPage();
-//    }
-
     @Step("Add new painting")
     public PaintingModal addNewPainting() {
         addNewItemButton.click();
@@ -65,4 +60,9 @@ public class PaintingListPage extends BasePage<PaintingListPage> {
         return this;
     }
 
+    @Step("Check that painting list size is: {size}")
+    public PaintingListPage checkPainitngListSize(int size) {
+        itemsComponent.getItems().shouldHave(size(size));
+        return this;
+    }
 }

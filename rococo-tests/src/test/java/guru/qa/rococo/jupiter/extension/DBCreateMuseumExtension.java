@@ -1,18 +1,23 @@
 package guru.qa.rococo.jupiter.extension;
 
 import guru.qa.rococo.db.model.MuseumEntity;
+import guru.qa.rococo.db.repository.GeoRepository;
+import guru.qa.rococo.db.repository.GeoRepositoryHibernate;
 import guru.qa.rococo.db.repository.MuseumRepository;
 import guru.qa.rococo.db.repository.MuseumRepositoryHibernate;
 import guru.qa.rococo.jupiter.annotation.GenerateMuseum;
+import guru.qa.rococo.jupiter.annotation.GeneratePainting;
+import guru.qa.rococo.model.CountryJson;
+import guru.qa.rococo.model.GeoJson;
 import guru.qa.rococo.model.MuseumJson;
-import guru.qa.rococo.util.CountryUtil;
-import guru.qa.rococo.util.DataUtil;
 import guru.qa.rococo.util.ImageUtil;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.extension.*;
 
 import java.util.UUID;
 
-import static guru.qa.rococo.util.DataUtil.getRandomCountry;
+import static guru.qa.rococo.jupiter.extension.DBCreatePaintingExtension.PAINTING_KEY;
+import static guru.qa.rococo.util.DataUtil.*;
 import static io.qameta.allure.Allure.step;
 
 public class DBCreateMuseumExtension implements BeforeEachCallback, ParameterResolver {
@@ -22,27 +27,23 @@ public class DBCreateMuseumExtension implements BeforeEachCallback, ParameterRes
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
-        GenerateMuseum annotation = extensionContext.getRequiredTestMethod().getAnnotation(GenerateMuseum.class);
-        if (annotation != null) {
-            step("Create museum for test (DB)", () -> {
-                CountryUtil countryUtil = new CountryUtil();
-                MuseumRepository museumRepository = new MuseumRepositoryHibernate();
+        GenerateMuseum museumAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(GenerateMuseum.class);
+        if (museumAnnotation != null) {
+            step("Create museum (DB)", () -> {
+                MuseumEntity museum = createMuseumForTest(museumAnnotation);
+                MuseumJson museumJson = MuseumJson.fromEntity(museum);
+                enrichMuseumCountryName(museumJson);
+                extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), museumJson);
+            });
+        }
 
-                String title = annotation.title().isEmpty() ? DataUtil.generateRandomMuseumName() : annotation.title();
-                UUID countryId = annotation.country().isEmpty() ? getRandomCountry().id() : countryUtil.getCountryIdByName(annotation.country());
-                String city = annotation.city().isEmpty() ? DataUtil.getRandomCityName() : annotation.city();
-                String description = annotation.city().isEmpty() ? DataUtil.generateRandomSentence(30) : annotation.description();
-                String photoBase64 = ImageUtil.convertImageToBase64(IMAGE_PATH);
-
-                MuseumEntity museum = new MuseumEntity();
-                museum.setTitle(title);
-                museum.setGeoId(countryId);
-                museum.setCity(city);
-                museum.setDescription(description);
-                museum.setPhoto(photoBase64.getBytes());
-
-                museumRepository.createMuseumForTest(museum);
-                extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), MuseumJson.fromEntity(museum));
+        GeneratePainting paintingAnnotation = extensionContext.getRequiredTestMethod().getAnnotation(GeneratePainting.class);
+        if (paintingAnnotation != null) {
+            step("Create museum from painting annotation (DB)", () -> {
+                MuseumEntity museum = createMuseumForTest(paintingAnnotation.museum());
+                MuseumJson museumJson = MuseumJson.fromEntity(museum);
+                enrichMuseumCountryName(museumJson);
+                extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId() + PAINTING_KEY, museumJson);
             });
         }
     }
@@ -56,9 +57,40 @@ public class DBCreateMuseumExtension implements BeforeEachCallback, ParameterRes
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public MuseumJson resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
         return extensionContext
                 .getStore(NAMESPACE)
                 .get(extensionContext.getUniqueId(), MuseumJson.class);
+    }
+
+    private MuseumEntity createMuseumForTest(GenerateMuseum museumAnnotation) {
+        GeoRepository geoRepository = new GeoRepositoryHibernate();
+        MuseumRepository museumRepository = new MuseumRepositoryHibernate();
+
+        String title = museumAnnotation.title().isEmpty() ? generateRandomMuseumName() : museumAnnotation.title();
+        UUID countryId = museumAnnotation.country().isEmpty() ? getRandomCountry().id() : geoRepository.getCountryByName(museumAnnotation.country()).getId();
+        String city = museumAnnotation.city().isEmpty() ? getRandomCityName() : museumAnnotation.city();
+        String description = museumAnnotation.city().isEmpty() ? generateRandomSentence(30) : museumAnnotation.description();
+        String photoBase64 = ImageUtil.convertImageToBase64(IMAGE_PATH);
+
+        MuseumEntity museum = new MuseumEntity();
+        museum.setTitle(title);
+        museum.setGeoId(countryId);
+        museum.setCity(city);
+        museum.setDescription(description);
+        museum.setPhoto(photoBase64.getBytes());
+
+        museumRepository.createMuseumForTest(museum);
+        return museum;
+    }
+
+    @Step("Enrich museum with country name")
+    private void enrichMuseumCountryName(MuseumJson museumJson) {
+        GeoRepository geoRepository = new GeoRepositoryHibernate();
+        UUID countryId = museumJson.getGeo().getCountry().id();
+        CountryJson countryJson = new CountryJson(countryId, geoRepository.getCountryById(countryId).getName());
+        GeoJson geoJson = new GeoJson(museumJson.getGeo().getCity(), countryJson);
+
+        museumJson.setGeo(geoJson);
     }
 }

@@ -4,4 +4,5 @@ import guru.qa.rococo.db.model.ArtistEntity;
 
 public interface ArtistRepository {
     void createArtistForTest(ArtistEntity artist);
+    void deleteArtist(ArtistEntity artist);
 }

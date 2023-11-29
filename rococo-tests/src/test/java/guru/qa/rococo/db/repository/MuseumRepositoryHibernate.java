@@ -10,6 +10,11 @@ public class MuseumRepositoryHibernate implements MuseumRepository {
 
     @Override
     public void createMuseumForTest(MuseumEntity museum) {
-        this.museumDAO.createMuseum(museum);
+        museumDAO.createMuseum(museum);
+    }
+
+    @Override
+    public void deleteMuseum(MuseumEntity museum) {
+        museumDAO.deleteMuseum(museum);
     }
 }

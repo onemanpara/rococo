@@ -8,10 +8,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Retention(RUNTIME)
 @Target(METHOD)
-public @interface GenerateArtist {
-    String name() default "";
+public @interface GeneratePainting {
+    GenerateArtist artist() default @GenerateArtist();
 
-    String biography() default "";
+    GenerateMuseum museum() default @GenerateMuseum();
 
-    int paintingCount() default 0;
+    String title() default "";
+
+    String description() default "";
 }

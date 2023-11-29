@@ -15,6 +15,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @ExtendWith({DBCreateUserExtension.class,
         DBCreateMuseumExtension.class,
         DBCreateArtistExtension.class,
+        DBCreatePaintingExtension.class,
         ApiLoginExtension.class,
         BrowserExtension.class,
         AllureJunit5.class})

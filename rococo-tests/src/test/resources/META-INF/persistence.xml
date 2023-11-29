@@ -8,6 +8,8 @@
         <class>guru.qa.rococo.db.model.user.UserDataEntity</class>
         <class>guru.qa.rococo.db.model.MuseumEntity</class>
         <class>guru.qa.rococo.db.model.ArtistEntity</class>
+        <class>guru.qa.rococo.db.model.PaintingEntity</class>
+        <class>guru.qa.rococo.db.model.CountryEntity</class>
     </persistence-unit>
 
 </persistence>

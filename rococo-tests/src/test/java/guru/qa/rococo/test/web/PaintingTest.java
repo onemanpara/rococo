@@ -1,17 +1,18 @@
 package guru.qa.rococo.test.web;
 
-import guru.qa.rococo.jupiter.annotation.ApiLogin;
-import guru.qa.rococo.jupiter.annotation.GenerateArtist;
-import guru.qa.rococo.jupiter.annotation.GenerateMuseum;
-import guru.qa.rococo.jupiter.annotation.GenerateUser;
+import guru.qa.rococo.jupiter.annotation.*;
 import guru.qa.rococo.model.ArtistJson;
 import guru.qa.rococo.model.MuseumJson;
+import guru.qa.rococo.model.PaintingJson;
+import guru.qa.rococo.page.PaintingDetailPage;
 import guru.qa.rococo.util.DataUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static guru.qa.rococo.util.DataUtil.generateRandomPaintingName;
 import static guru.qa.rococo.util.DataUtil.generateRandomSentence;
+import static guru.qa.rococo.util.ImageUtil.convertImageToBase64;
 
 @DisplayName("WEB: Картины")
 public class PaintingTest extends BaseWebTest {
@@ -41,6 +42,52 @@ public class PaintingTest extends BaseWebTest {
                 .openPage()
                 .waitForPageIsLoaded()
                 .checkPaintingIsExist(title);
+    }
+
+    @Test
+    @DisplayName("WEB: Пользователь может изменить данные картины")
+    @Tag("WEB")
+    @ApiLogin(user = @GenerateUser)
+    @GeneratePainting
+    @GenerateMuseum
+    @GenerateArtist
+    void shouldEditPainting(PaintingJson createdPainting, MuseumJson createdMuseum, ArtistJson createdArtist) {
+        String newTitle = generateRandomPaintingName();
+        String newDescription = DataUtil.generateRandomSentence(50);
+        String newArtistName = createdArtist.getName();
+        String newMuseumName = createdMuseum.getTitle();
+        PaintingDetailPage paintingDetailPage = new PaintingDetailPage(createdPainting.getId().toString());
+
+        paintingDetailPage
+                .openPage()
+                .waitForPageIsLoaded()
+                .editPainting()
+                .setPhoto(NEW_PHOTO_PATH)
+                .setTitle(newTitle)
+                .selectArtist(newArtistName)
+                .setDescription(newDescription)
+                .selectMuseum(newMuseumName)
+                .successSubmit();
+        paintingDetailPage
+                .checkNotificationText("Обновлена картина: " + newTitle)
+                .openPage()
+                .waitForPageIsLoaded()
+                .checkTitle(newTitle)
+                .checkArtist(newArtistName)
+                .checkDescription(newDescription)
+                .checkPhoto(convertImageToBase64(NEW_PHOTO_PATH));
+    }
+
+    @Test
+    @DisplayName("WEB: При использовании поиска отображается найденная картина")
+    @Tag("WEB")
+    @GeneratePainting
+    void shouldShowPaintingAfterFilter(PaintingJson createdPainting) {
+        paintingListPage
+                .openPage()
+                .waitForPageIsLoaded()
+                .filterPaintingByTitle(createdPainting.getTitle())
+                .checkPainitngListSize(1);
     }
 
     @Test

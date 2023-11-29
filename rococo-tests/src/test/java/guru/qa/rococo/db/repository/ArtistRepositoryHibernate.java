@@ -10,6 +10,11 @@ public class ArtistRepositoryHibernate implements ArtistRepository {
 
     @Override
     public void createArtistForTest(ArtistEntity artist) {
-        this.artistDAO.createArtist(artist);
+        artistDAO.createArtist(artist);
+    }
+
+    @Override
+    public void deleteArtist(ArtistEntity artist) {
+        artistDAO.deleteArtist(artist);
     }
 }

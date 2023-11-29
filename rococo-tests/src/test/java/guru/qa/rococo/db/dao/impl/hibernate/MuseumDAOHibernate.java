@@ -13,6 +13,11 @@ public class MuseumDAOHibernate extends JpaService implements MuseumDAO {
 
     @Override
     public void createMuseum(MuseumEntity museum) {
-        this.persist(museum);
+        persist(museum);
+    }
+
+    @Override
+    public void deleteMuseum(MuseumEntity museum) {
+        remove(museum);
     }
 }

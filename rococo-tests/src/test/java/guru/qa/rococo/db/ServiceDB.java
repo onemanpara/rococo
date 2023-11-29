@@ -7,7 +7,9 @@ public enum ServiceDB {
     AUTH("jdbc:mysql://%s:%d/rococo-auth"),
     USERDATA("jdbc:mysql://%s:%d/rococo-userdata"),
     MUSEUM("jdbc:mysql://%s:%d/rococo-museum"),
-    ARTIST("jdbc:mysql://%s:%d/rococo-artist");
+    ARTIST("jdbc:mysql://%s:%d/rococo-artist"),
+    PAINTING("jdbc:mysql://%s:%d/rococo-painting"),
+    GEO("jdbc:mysql://%s:%d/rococo-geo");
 
     private static final Config cfg = Config.getConfig();
     private final String url;

@@ -6,26 +6,27 @@ import guru.qa.rococo.page.component.modal.MuseumModal;
 import io.qameta.allure.Step;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selenide.$;
 
 public class MuseumDetailPage extends BasePage<MuseumDetailPage> {
     private static final String PAGE_URL = CFG.rococoFrontendUrl() + "/museum";
     private final String museumId;
-    private final SelenideElement title = Selenide.$(".card-header");
-    private final SelenideElement geo = Selenide.$("[data-testid=geo]");
-    private final SelenideElement description = Selenide.$("[data-testid=description]");
-    private final SelenideElement photo = Selenide.$("[data-testid=museumPhoto]");
-    private final SelenideElement editButton = Selenide.$("[data-testid=edit-museum]");
+    private final SelenideElement title = $(".card-header");
+    private final SelenideElement geo = $("[data-testid=geo]");
+    private final SelenideElement description = $("[data-testid=description]");
+    private final SelenideElement photo = $("[data-testid=museumPhoto]");
+    private final SelenideElement editButton = $("[data-testid=edit-museum]");
 
     public MuseumDetailPage(String museumId) {
         this.museumId = museumId;
     }
 
     public MuseumDetailPage() {
-        this.museumId = "";
+        museumId = "";
     }
 
     protected String getPageUrl() {
-        return PAGE_URL + "/" + this.museumId;
+        return PAGE_URL + "/" + museumId;
     }
 
     @Step("Open museum detail page")

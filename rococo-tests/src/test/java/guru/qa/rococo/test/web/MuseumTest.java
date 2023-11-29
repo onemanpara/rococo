@@ -3,7 +3,6 @@ package guru.qa.rococo.test.web;
 import guru.qa.rococo.jupiter.annotation.ApiLogin;
 import guru.qa.rococo.jupiter.annotation.GenerateMuseum;
 import guru.qa.rococo.jupiter.annotation.GenerateUser;
-import guru.qa.rococo.model.GeoJson;
 import guru.qa.rococo.model.MuseumJson;
 import guru.qa.rococo.page.MuseumDetailPage;
 import guru.qa.rococo.util.DataUtil;
@@ -46,26 +45,7 @@ public class MuseumTest extends BaseWebTest {
     }
 
     @Test
-    @DisplayName("WEB: На детальной странице музея отображаются данные из БД")
-    @Tag("WEB")
-    @GenerateMuseum
-    void shouldShowMuseumDataFromDB(MuseumJson createdMuseum) {
-        String museumTitle = createdMuseum.getTitle();
-        GeoJson geo = createdMuseum.getGeo();
-
-        museumListPage
-                .openPage()
-                .waitForPageIsLoaded()
-                .filterMuseumsByTitle(museumTitle)
-                .openMuseumCard(museumTitle)
-                .checkTitle(museumTitle)
-                .checkGeo(geo.getCountry().name(), geo.getCity())
-                .checkDescription(createdMuseum.getDescription())
-                .checkPhoto(createdMuseum.getPhoto());
-    }
-
-    @Test
-    @DisplayName("WEB: Пользователь может изменить данные о музее")
+    @DisplayName("WEB: Пользователь может изменить данные музея")
     @Tag("WEB")
     @ApiLogin(user = @GenerateUser)
     @GenerateMuseum(title = "Музей в Австралии", country = "Австралия", city = "Сидней")

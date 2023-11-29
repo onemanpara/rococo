@@ -37,12 +37,6 @@ public class ArtistListPage extends BasePage<ArtistListPage> {
         return this;
     }
 
-    @Step("Open artist card with title: {title}")
-    public ArtistDetailPage openArtistCard(String title) {
-        itemsComponent.getItemCard(title).click();
-        return new ArtistDetailPage();
-    }
-
     @Step("Filter artist by name: {name}")
     public ArtistListPage filterArtistByName(String name) {
         searchComponent.filterItemsByTitle(name);

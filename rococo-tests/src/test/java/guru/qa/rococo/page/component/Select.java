@@ -27,7 +27,7 @@ public class Select extends BaseComponent<Select> {
                 return;
             }
 
-            options.last().scrollIntoView(true);
+            options.last().scrollIntoView(true).click();
             waitForNewOptionsAreLoaded(initialOptionsCount, option);
             initialOptionsCount = options.size();
         }

@@ -1,5 +1,6 @@
 package guru.qa.rococo.db.model;
 
+import guru.qa.rococo.model.MuseumJson;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +28,17 @@ public class MuseumEntity {
     private byte[] photo;
     @Column(name = "geo_id", nullable = false)
     private UUID geoId;
+
+    public static MuseumEntity fromJson(MuseumJson museumJson) {
+        MuseumEntity museumEntity = new MuseumEntity();
+        museumEntity.setId(museumJson.getId());
+        museumEntity.setTitle(museumJson.getTitle());
+        museumEntity.setDescription(museumJson.getDescription());
+        museumEntity.setCity(museumJson.getGeo().getCity());
+        museumEntity.setPhoto(museumJson.getPhoto().getBytes());
+        museumEntity.setGeoId(museumJson.getGeo().getCountry().id());
+        return museumEntity;
+    }
 
     @Override
     public boolean equals(Object o) {

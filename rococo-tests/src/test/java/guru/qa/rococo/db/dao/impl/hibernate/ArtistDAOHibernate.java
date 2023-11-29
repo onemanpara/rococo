@@ -13,6 +13,11 @@ public class ArtistDAOHibernate extends JpaService implements ArtistDAO {
 
     @Override
     public void createArtist(ArtistEntity artist) {
-        this.persist(artist);
+        persist(artist);
+    }
+
+    @Override
+    public void deleteArtist(ArtistEntity artist) {
+        remove(artist);
     }
 }

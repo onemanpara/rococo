@@ -5,6 +5,7 @@ import guru.qa.rococo.page.component.Input;
 import guru.qa.rococo.page.component.Select;
 import io.qameta.allure.Step;
 
+import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selenide.$;
 
 public class PaintingModal extends BaseModal<PaintingModal> {
@@ -54,6 +55,12 @@ public class PaintingModal extends BaseModal<PaintingModal> {
     @Step("Check description error is: {error}")
     public PaintingModal checkDescriptionError(String error) {
         descriptionInput.checkError(error);
+        return this;
+    }
+
+    @Step("Check artist select is not exist")
+    public PaintingModal checkArtistSelectIsNotExist() {
+        artistSelect.getSelf().shouldNot(exist);
         return this;
     }
 

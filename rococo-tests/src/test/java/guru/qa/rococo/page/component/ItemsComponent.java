@@ -7,14 +7,9 @@ import com.codeborne.selenide.SelenideElement;
 import java.util.NoSuchElementException;
 
 import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class ItemsComponent extends BaseComponent<ItemsComponent> {
-
-    public ItemsComponent() {
-        super($("data-testid=items"));
-    }
+public class ItemsComponent {
 
     private final ElementsCollection items = $$("[data-testid=item]");
 
