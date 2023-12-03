@@ -31,7 +31,7 @@ public class ArtistEntity {
     @Column(nullable = false)
     private String biography;
 
-    @Column(name = "photo", columnDefinition = "bytea")
+    @Column(name = "photo", columnDefinition = "bytea", nullable = false)
     private byte[] photo;
 
     public static ArtistEntity fromAddArtistGrpcMessage(AddArtistRequest request) {
