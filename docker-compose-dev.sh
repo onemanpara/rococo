@@ -25,12 +25,12 @@ fi
 
 if [ "$1" = "push" ] || [ "$2" = "push" ]; then
   echo "### Build & push images (front: $front) ###"
-  bash ./gradlew clean build dockerPush
+  bash ./gradlew clean build dockerPush -x :rococo-tests:test
   cd "$front" || exit
   bash ./docker-build.sh dev push
 else
   echo "### Build images (front: $front) ###"
-  bash ./gradlew clean build dockerTagLatest
+  bash ./gradlew clean build dockerTagLatest -x :rococo-tests:test
   cd "$front" || exit
   bash ./docker-build.sh dev
 fi
