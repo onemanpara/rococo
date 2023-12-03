@@ -8,14 +8,19 @@ option java_multiple_files = true;
 option java_package = "guru.qa.grpc.rococo.grpc";
 option java_outer_classname = "RococoGeoProto";
 
-service RococoCountryService {
+service RococoGeoService {
   rpc GetCountry(CountryId) returns (CountryResponse);
+  rpc GetCountryByName(CountryName) returns (CountryResponse);
   rpc GetAllCountry(AllCountryRequest) returns (AllCountryResponse);
   rpc GetCountriesByIds(CountryIdsRequest) returns (AllCountryByIdsResponse);
 }
 
 message CountryId {
   bytes id = 1;
+}
+
+message CountryName {
+  string name = 1;
 }
 
 message CountryResponse {

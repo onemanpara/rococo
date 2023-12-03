@@ -138,7 +138,7 @@
     <header class="card-header text-center font-bold text-2xl">{$singleArtistStore?.data?.name}</header>
     <section class="p-4 grid grid-cols-1 lg:grid-cols-3 justify-items-center">
         <div class="flex flex-col">
-            <Avatar src={$singleArtistStore?.data?.photo} width="w-56" rounded="rounded-full" class="col-span-1"/>
+            <Avatar src={$singleArtistStore?.data?.photo} width="w-56" rounded="rounded-full" class="col-span-1" data-testid="artistPhoto"/>
             {#if $sessionStore.user}
                 <EditComponent
                         {errorTrigger}
@@ -155,7 +155,7 @@
                            id: authorId,
                         }}
                 />
-                <button class="btn variant-filled-primary m-3 mx-auto block w-full" type="button" on:click={clickAddButton}>Добавить картину</button>
+                <button class="btn variant-filled-primary m-3 mx-auto block w-full" data-testid="addPainting" type="button" on:click={clickAddButton}>Добавить картину</button>
             {/if}
         </div>
         <p class="col-span-2 w-4/5 m-2" data-testid="biography">{$singleArtistStore?.data?.biography}</p>

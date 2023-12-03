@@ -27,8 +27,8 @@ public class GrpcCountryClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(GrpcCountryClient.class);
 
-    @GrpcClient("grpcCountryClient")
-    private RococoCountryServiceGrpc.RococoCountryServiceBlockingStub rococoCountryServiceStub;
+    @GrpcClient("grpcGeoClient")
+    private RococoGeoServiceGrpc.RococoGeoServiceBlockingStub rococoCountryServiceStub;
 
     public @Nonnull Page<CountryJson> getAllCountry(Pageable pageable) {
         AllCountryRequest request = AllCountryRequest.newBuilder()
@@ -48,7 +48,8 @@ public class GrpcCountryClient {
         }
     }
 
-    @Nonnull CountryJson getCountryById(UUID id) {
+    @Nonnull
+    CountryJson getCountryById(UUID id) {
         CountryId request = CountryId.newBuilder()
                 .setId(copyFromUtf8(id.toString()))
                 .build();

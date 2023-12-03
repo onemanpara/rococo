@@ -37,7 +37,7 @@ grpc:
     grpcMuseumClient:
       address: 'static://localhost:8093'
       negotiationType: PLAINTEXT
-    grpcCountryClient:
+    grpcGeoClient:
       address: 'static://localhost:8094'
       negotiationType: PLAINTEXT
     grpcPaintingClient:
@@ -68,7 +68,7 @@ grpc:
     grpcMuseumClient:
       address: 'static://museum.rococo.dc:8093'
       negotiationType: PLAINTEXT
-    grpcCountryClient:
+    grpcGeoClient:
       address: 'static://geo.rococo.dc:8094'
       negotiationType: PLAINTEXT
     grpcPaintingClient:

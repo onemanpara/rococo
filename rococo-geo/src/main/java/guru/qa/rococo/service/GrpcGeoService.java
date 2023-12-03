@@ -17,10 +17,10 @@ import static io.grpc.Status.NOT_FOUND;
 import static java.util.UUID.fromString;
 
 @GrpcService
-public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountryServiceImplBase {
+public class GrpcGeoService extends RococoGeoServiceGrpc.RococoGeoServiceImplBase {
     private final CountryRepository countryRepository;
 
-    public GrpcCountryService(CountryRepository countryRepository) {
+    public GrpcGeoService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
 
@@ -37,6 +37,24 @@ public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountrySe
                         },
                         () -> responseObserver.onError(
                                 NOT_FOUND.withDescription("Country not found by id: " + countryId)
+                                        .asRuntimeException()
+                        )
+                );
+    }
+
+    @Override
+    public void getCountryByName(CountryName request, StreamObserver<CountryResponse> responseObserver) {
+        String countryName = request.getName();
+
+        countryRepository.findByName(countryName)
+                .ifPresentOrElse(
+                        countryEntity -> {
+                            CountryResponse response = CountryEntity.toGrpcMessage(countryEntity);
+                            responseObserver.onNext(response);
+                            responseObserver.onCompleted();
+                        },
+                        () -> responseObserver.onError(
+                                NOT_FOUND.withDescription("Country not found by name: " + countryName)
                                         .asRuntimeException()
                         )
                 );
