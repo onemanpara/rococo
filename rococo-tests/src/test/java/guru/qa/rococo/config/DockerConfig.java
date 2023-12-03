@@ -13,9 +13,6 @@ public class DockerConfig implements Config {
                 .addArguments("--no-sandbox");
     }
 
-    private DockerConfig() {
-    }
-
     @Override
     public String databaseHost() {
         return "rococo-all-db";
@@ -32,6 +29,36 @@ public class DockerConfig implements Config {
     }
 
     @Override
+    public String userdataGrpcAddress() {
+        return "rococo-userdata";
+    }
+
+    @Override
+    public int userdataGrpcPort() {
+        return 8091;
+    }
+
+    @Override
+    public String artistGrpcAddress() {
+        return "rococo-artist";
+    }
+
+    @Override
+    public int artistGrpcPort() {
+        return 8092;
+    }
+
+    @Override
+    public String museumGrpcAddress() {
+        return "rococo-museum";
+    }
+
+    @Override
+    public int museumGrpcPort() {
+        return 8093;
+    }
+
+    @Override
     public String geoGrpcAddress() {
         return "rococo-geo";
     }
@@ -39,5 +66,15 @@ public class DockerConfig implements Config {
     @Override
     public int geoGrpcPort() {
         return 8094;
+    }
+
+    @Override
+    public String paintingGrpcAddress() {
+        return "rococo-painting";
+    }
+
+    @Override
+    public int paintingGrpcPort() {
+        return 8095;
     }
 }

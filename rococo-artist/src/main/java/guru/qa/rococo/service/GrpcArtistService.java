@@ -44,7 +44,7 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
     }
 
     @Override
-    public void getAllArtist(GetAllArtistRequest request, StreamObserver<GetAllArtistResponse> responseObserver) {
+    public void getAllArtist(AllArtistRequest request, StreamObserver<AllArtistResponse> responseObserver) {
         String name = request.getName();
         int page = request.getPage();
         int size = request.getSize();
@@ -52,7 +52,7 @@ public class GrpcArtistService extends RococoArtistServiceGrpc.RococoArtistServi
 
         Page<ArtistEntity> artistPage = artistRepository.findAllByNameContainsIgnoreCase(name, pageable);
 
-        GetAllArtistResponse.Builder responseBuilder = GetAllArtistResponse.newBuilder();
+        AllArtistResponse.Builder responseBuilder = AllArtistResponse.newBuilder();
         artistPage.forEach(artistEntity -> {
             ArtistResponse artistResponse = ArtistEntity.toGrpcMessage(artistEntity);
             responseBuilder.addArtists(artistResponse);

@@ -16,4 +16,5 @@ public @interface GenerateMuseum {
     String city() default "";
 
     String description() default "";
+    boolean enrichJsonCountryName() default true;
 }

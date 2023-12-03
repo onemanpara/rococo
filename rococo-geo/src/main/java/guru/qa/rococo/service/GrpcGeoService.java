@@ -17,10 +17,10 @@ import static io.grpc.Status.NOT_FOUND;
 import static java.util.UUID.fromString;
 
 @GrpcService
-public class GrpcCountryService extends RococoCountryServiceGrpc.RococoCountryServiceImplBase {
+public class GrpcGeoService extends RococoGeoServiceGrpc.RococoGeoServiceImplBase {
     private final CountryRepository countryRepository;
 
-    public GrpcCountryService(CountryRepository countryRepository) {
+    public GrpcGeoService(CountryRepository countryRepository) {
         this.countryRepository = countryRepository;
     }
 

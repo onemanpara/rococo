@@ -25,6 +25,36 @@ public class LocalConfig implements Config {
     }
 
     @Override
+    public String userdataGrpcAddress() {
+        return "localhost";
+    }
+
+    @Override
+    public int userdataGrpcPort() {
+        return 8091;
+    }
+
+    @Override
+    public String artistGrpcAddress() {
+        return "localhost";
+    }
+
+    @Override
+    public int artistGrpcPort() {
+        return 8092;
+    }
+
+    @Override
+    public String museumGrpcAddress() {
+        return "localhost";
+    }
+
+    @Override
+    public int museumGrpcPort() {
+        return 8093;
+    }
+
+    @Override
     public String geoGrpcAddress() {
         return "localhost";
     }
@@ -33,4 +63,16 @@ public class LocalConfig implements Config {
     public int geoGrpcPort() {
         return 8094;
     }
+
+    @Override
+    public String paintingGrpcAddress() {
+        return "localhost";
+    }
+
+    @Override
+    public int paintingGrpcPort() {
+        return 8095;
+    }
+
+
 }

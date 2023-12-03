@@ -1,12 +1,11 @@
 package guru.qa.rococo.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
 import javax.annotation.Nonnull;
-import java.util.NoSuchElementException;
 
+import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.text;
 
 public class Select extends BaseComponent<Select> {
@@ -28,17 +27,11 @@ public class Select extends BaseComponent<Select> {
             }
 
             options.last().scrollIntoView(true).click();
-            waitForNewOptionsAreLoaded(initialOptionsCount, option);
+            options.shouldHave(sizeGreaterThan(initialOptionsCount)
+                    .because("Option with text: '" + option + "' not found. " +
+                            "Timed out waiting for new options to be loaded. Current options count:" + options.size() +
+                            "Current options list:" + options.asFixedIterable().stream().map(SelenideElement::text).toList()));
             initialOptionsCount = options.size();
-        }
-    }
-
-    private void waitForNewOptionsAreLoaded(int initialOptionsCount, String optionName) {
-        try {
-            Selenide.Wait().until(webDriver -> options.size() > initialOptionsCount);
-        } catch (Exception e) {
-            throw new NoSuchElementException("Option with text: '" + optionName + "' not found. " +
-                    "Timed out waiting for new options to be loaded. Current options count: " + options.size(), e);
         }
     }
 

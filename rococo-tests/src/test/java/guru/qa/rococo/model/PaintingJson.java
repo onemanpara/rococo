@@ -2,12 +2,15 @@ package guru.qa.rococo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.protobuf.ByteString;
+import guru.qa.grpc.rococo.grpc.PaintingResponse;
 import guru.qa.rococo.db.model.PaintingEntity;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Objects;
 import java.util.UUID;
+
+import static java.util.UUID.fromString;
 
 @Getter
 @Setter
@@ -24,6 +27,22 @@ public class PaintingJson {
     private MuseumJson museum;
     @JsonProperty("artist")
     private ArtistJson artist;
+
+    public static PaintingJson fromGrpcMessage(PaintingResponse paintingResponse) {
+        ArtistJson artist = new ArtistJson();
+        artist.setId(fromString(paintingResponse.getArtistId().getId().toStringUtf8()));
+        MuseumJson museum = new MuseumJson();
+        museum.setId(fromString(paintingResponse.getMuseumId().getId().toStringUtf8()));
+
+        PaintingJson paintingJson = new PaintingJson();
+        paintingJson.setId(fromString(paintingResponse.getId().toStringUtf8()));
+        paintingJson.setTitle(paintingResponse.getTitle());
+        paintingJson.setDescription(paintingResponse.getDescription());
+        paintingJson.setContent(paintingResponse.getContent().toStringUtf8());
+        paintingJson.setArtist(artist);
+        paintingJson.setMuseum(museum);
+        return paintingJson;
+    }
 
     public static PaintingJson fromEntity(PaintingEntity entity) {
         MuseumJson museumJson = new MuseumJson();

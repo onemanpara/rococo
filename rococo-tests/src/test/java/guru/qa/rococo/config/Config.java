@@ -26,7 +26,23 @@ public interface Config {
         return 3306;
     }
 
+    String userdataGrpcAddress();
+
+    int userdataGrpcPort();
+
+    String artistGrpcAddress();
+
+    int artistGrpcPort();
+
+    String museumGrpcAddress();
+
+    int museumGrpcPort();
+
     String geoGrpcAddress();
 
     int geoGrpcPort();
+
+    String paintingGrpcAddress();
+
+    int paintingGrpcPort();
 }

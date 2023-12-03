@@ -1,11 +1,11 @@
 package guru.qa.rococo.page.component;
 
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 
-import java.util.NoSuchElementException;
+import java.time.Duration;
 
+import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -19,11 +19,12 @@ public class ItemsComponent {
 
         while (!requireItem.exists()) {
             items.last().scrollIntoView(true);
-            waitForNewItemsAreLoaded(initialItemsCount, itemName);
+            items.shouldHave(sizeGreaterThan(initialItemsCount)
+                    .because("Item with text: '" + itemName + "' not found. " +
+                    "Timed out waiting for new items to be loaded. Current items count:" + items.size()), Duration.ofMillis(8000));
             initialItemsCount = items.size();
             requireItem = items.find(text(itemName));
         }
-
         return requireItem;
     }
 
@@ -31,12 +32,4 @@ public class ItemsComponent {
         return items;
     }
 
-    private void waitForNewItemsAreLoaded(int initialItemsCount, String itemName) {
-        try {
-            Selenide.Wait().until(webDriver -> items.size() > initialItemsCount);
-        } catch (Exception e) {
-            throw new NoSuchElementException("Item with text: '" + itemName + "' not found. " +
-                    "Timed out waiting for new items to be loaded. Current items count: " + items.size(), e);
-        }
-    }
 }

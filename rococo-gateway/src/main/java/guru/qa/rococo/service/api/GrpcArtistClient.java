@@ -49,16 +49,16 @@ public class GrpcArtistClient {
     }
 
     public @Nonnull Page<ArtistJson> getAllArtist(@Nullable String name, Pageable pageable) {
-        GetAllArtistRequest.Builder builder = GetAllArtistRequest.newBuilder()
+        AllArtistRequest.Builder builder = AllArtistRequest.newBuilder()
                 .setPage(pageable.getPageNumber())
                 .setSize(pageable.getPageSize());
         if (name != null) {
             builder.setName(name);
         }
-        GetAllArtistRequest request = builder.build();
+        AllArtistRequest request = builder.build();
 
         try {
-            GetAllArtistResponse response = rococoArtistServiceStub.getAllArtist(request);
+            AllArtistResponse response = rococoArtistServiceStub.getAllArtist(request);
             List<ArtistJson> artistJsonList = response.getArtistsList()
                     .stream()
                     .map(ArtistJson::fromGrpcMessage)

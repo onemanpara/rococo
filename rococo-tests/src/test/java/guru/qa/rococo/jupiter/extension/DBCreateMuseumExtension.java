@@ -32,7 +32,7 @@ public class DBCreateMuseumExtension implements BeforeEachCallback, ParameterRes
             step("Create museum (DB)", () -> {
                 MuseumEntity museum = createMuseumForTest(museumAnnotation);
                 MuseumJson museumJson = MuseumJson.fromEntity(museum);
-                enrichMuseumCountryName(museumJson);
+                if (museumAnnotation.enrichJsonCountryName()) enrichMuseumCountryName(museumJson);
                 extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId(), museumJson);
             });
         }
@@ -42,7 +42,7 @@ public class DBCreateMuseumExtension implements BeforeEachCallback, ParameterRes
             step("Create museum from painting annotation (DB)", () -> {
                 MuseumEntity museum = createMuseumForTest(paintingAnnotation.museum());
                 MuseumJson museumJson = MuseumJson.fromEntity(museum);
-                enrichMuseumCountryName(museumJson);
+                if (paintingAnnotation.museum().enrichJsonCountryName()) enrichMuseumCountryName(museumJson);
                 extensionContext.getStore(NAMESPACE).put(extensionContext.getUniqueId() + PAINTING_KEY, museumJson);
             });
         }

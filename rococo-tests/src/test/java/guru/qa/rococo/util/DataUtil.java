@@ -42,7 +42,7 @@ public class DataUtil {
 
     @Nonnull
     public static String generateRandomName() {
-        return fakerRu.name().nameWithMiddle() + " " + LocalDateTime.now().format(ofPattern("dd-MM-yy-HH:mm:ss"));
+        return "Художник " + fakerRu.name().firstName() + " " + LocalDateTime.now().format(ofPattern("dd-MM-yy-HH:mm:ss"));
     }
 
     @Nonnull
