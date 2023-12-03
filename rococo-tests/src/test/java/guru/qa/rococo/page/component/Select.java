@@ -29,8 +29,7 @@ public class Select extends BaseComponent<Select> {
             options.last().scrollIntoView(true).click();
             options.shouldHave(sizeGreaterThan(initialOptionsCount)
                     .because("Option with text: '" + option + "' not found. " +
-                            "Timed out waiting for new options to be loaded. Current options count:" + options.size() +
-                            "Current options list:" + options.asFixedIterable().stream().map(SelenideElement::text).toList()));
+                            "Timed out waiting for new options to be loaded. Current options count:" + options.size()));
             initialOptionsCount = options.size();
         }
     }
