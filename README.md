@@ -1,13 +1,36 @@
 # Rococo
 
-**Rococo - путеводитель в мире живописи! Исследуйте уникальные картины, познакомьтесь с их авторами, загляните в музеи из разных уголков мира.**
+**Rococo - путеводитель в мире живописи! Исследуйте уникальные картины, познакомьтесь с их авторами, загляните в музеи
+из разных уголков мира.**
 
-##	Оглавление
+## Оглавление
+
+- [Архитектура приложения](#architecture)
 - [Список портов приложения](#ports)
 - [Запуск Rococo локально в IDE](#local-run)
 - [Запуск Rococo в докере](#docker-run)
 - [Запуск тестов локально](#local-run-tests)
+- [Запуск тестов в докере](#docker-run-tests)
 - [Пример тестового отчёта](#report)
+
+<a name="architecture"></a>
+## Архитектура приложения
+
+Приложение Rococo построено на основе микросервисной архитектуры:
+
+- **auth** - аутентификация и авторизация.
+- **gateway** - обработка запросов клиентов и вызов нужных микросервисов.
+- **userdata** - информация о пользователе: юзернейм, имя и фамилия, аватар и, конечно, id.
+- **geo** - данные о странах мира.
+- **museum** - сведения о музеях.
+- **artist** - сведениях о художниках.
+- **painting** - сведениях о картинах.
+- frontend - интерфейс приложения, с которым взаимодействует пользователь
+<br>
+Напрямую пользователь общается только с сервисами **auth** и **gateway** и ничего не знает о существовании других сервисов. 
+В то время как микросервисы - ничего не знают об аутентификационных данных пользователя, ведь они общаются только с **gateway-сервисом**, 
+который получает информацию об авторизации из **auth-сервиса**.
+<img src="images/architecture.jpg" alt="Architecture">
 
 <a name="ports"></a>
 ## Список портов приложения
@@ -23,15 +46,14 @@
 | PAINTING |  8095 (grpc)  |
 | FRONTEND |  80 (server)  |
 
+**Минимальные предусловия для запуска проекта локально**
 
-**Минимальные предусловия для запуска проекта**
-
-- На Windows рекомендуется используется терминал bash а не powershell 
+- На Windows рекомендуется используется терминал bash а не powershell
 - Установить Java версии 17 или новее. Это необходимо, т.к. проект не поддерживает версии <17
-- Установить пакетный менеджер для сборки front-end npm [Инструкция](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
-Рекомендованная версия Node.js - 18.13.0 (LTS)
+- Установить пакетный менеджер для сборки front-end
+  npm [Инструкция](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+  Рекомендованная версия Node.js - 18.13.0 (LTS)
 - Спуллить контейнер mysql:8.0.33, zookeeper и kafka версии 7.3.2
-
 ```posh
 $ docker pull mysql:8.0.33
 $ docker pull confluentinc/cp-zookeeper:7.3.2
@@ -39,29 +61,26 @@ $ docker pull confluentinc/cp-kafka:7.3.2
 ```
 
 - Создать volume для сохранения данных из БД в docker на вашем компьютере
-
 ```posh
 docker volume create rococo-mysql
 ```
+
 <a name="local-run"></a>
 # Запуск Rococo локально в IDE:
 
-####  1. Запустить фронтенд, БД, zookeeper и kafka командами:
+#### 1. Запустить фронтенд, БД, zookeeper и kafka командами:
 
 Запустив скрипт, для *nix:
-
 ```posh
 $ bash localenv.sh
 ```
 
 Запустив скрипт, для windows:
-
 ```posh
 $ bash localenv-windows.sh
 ```
 
 Или выполнив последовательно команды, для *nix:
-
 ```posh
 docker run --name rococo-all -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:8.0.33
 
@@ -81,7 +100,6 @@ npm run dev
 ```
 
 Для Windows:
-
 ```posh
 docker run --name rococo-all -p 3306:3306 -e MYSQL_ROOT_PASSWORD=secret -d mysql:8.0.33
 
@@ -99,7 +117,8 @@ npm run dev
 
 #### 2. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
 
-Для этого зайти в меню Run -> Edit Configurations -> выбрать main класс -> в поле Environment variables указать spring.profiles.active=local
+Для этого зайти в меню Run -> Edit Configurations -> выбрать main класс -> в поле Environment variables указать
+spring.profiles.active=local
 
 #### 3. Запустить сервис rococo-auth c помощью gradle или командой Run в IDE:
 
@@ -150,7 +169,7 @@ $ vi /etc/hosts
 127.0.0.1       gateway.rococo.dc
 ```
 
-В windows файл hosts лежит по пути: 
+В windows файл hosts лежит по пути:
 ```
 C:\Windows\System32\drivers\etc\hosts
 ```
@@ -176,7 +195,9 @@ Rococo при запуске в докере будет работать для 
 
 <a name="local-run-tests"></a>
 # Запуск тестов локально
-**Обратите внимание! Запуск тестов происходит в три потока. Изменить число потоков можно в файле [junit-platform.properties](rococo-tests%2Fsrc%2Ftest%2Fresources%2Fjunit-platform.properties)**
+
+**Обратите внимание! Запуск тестов происходит в три потока. Изменить число потоков можно в
+файле [junit-platform.properties](rococo-tests%2Fsrc%2Ftest%2Fresources%2Fjunit-platform.properties)**
 
 Если приложение было запущено локально через IDE:
 ```posh
@@ -193,13 +214,12 @@ $ ./gradlew :rococo-tests:clean test -Dtest.env=docker
 $ ./gradlew :rococo-tests:allureServe
 ```
 
+<a name="docker-run-tests"></a>
+# Запуск тестов в докере
+**TODO**
+
 <a name="report"></a>
 # Пример тестового отчета
+<img src="images/allure-overview.jpg" alt="Allure Overview">
+<img src="images/allure-suites.jpg" alt="Allure Suites">
 
-<p align="center">
-  <img src="images/allure-overview.jpg" alt="Allure Overview" width="800">
-</p>
-
-<p align="center">
-  <img src="images/allure-suites.jpg" alt="Allure Suites" width="1200">
-</p>
