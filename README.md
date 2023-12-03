@@ -2,11 +2,33 @@
 
 **Rococo - путеводитель в мире живописи! Исследуйте уникальные картины, познакомьтесь с их авторами, загляните в музеи из разных уголков мира.**
 
+##	Оглавление
+- [Список портов приложения](#ports)
+- [Запуск Rococo локально в IDE](#local-run)
+- [Запуск Rococo в докере](#docker-run)
+- [Запуск тестов локально](#local-run-tests)
+- [Пример тестового отчёта](#report)
+
+<a name="ports"></a>
+## Список портов приложения
+
+|  Сервис  |     Порт      |
+|:--------:|:-------------:|
+|   AUTH   | 9000 (server) |
+| GATEWAY  | 8090 (server) |
+| USERDATA |  8091 (grpc)  |
+|  ARTIST  |  8092 (grpc)  |
+|  MUSEUM  |  8093 (grpc)  |
+|   GEO    |  8094 (grpc)  |
+| PAINTING |  8095 (grpc)  |
+| FRONTEND |  80 (server)  |
+
+
 **Минимальные предусловия для запуска проекта**
 
 - На Windows рекомендуется используется терминал bash а не powershell 
 - Установить Java версии 17 или новее. Это необходимо, т.к. проект не поддерживает версии <17
-- Установить пакетый менеджер для сборки front-end npm [Инструкция](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+- Установить пакетный менеджер для сборки front-end npm [Инструкция](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
 Рекомендованная версия Node.js - 18.13.0 (LTS)
 - Спуллить контейнер mysql:8.0.33, zookeeper и kafka версии 7.3.2
 
@@ -21,7 +43,7 @@ $ docker pull confluentinc/cp-kafka:7.3.2
 ```posh
 docker volume create rococo-mysql
 ```
-
+<a name="local-run"></a>
 # Запуск Rococo локально в IDE:
 
 ####  1. Запустить фронтенд, БД, zookeeper и kafka командами:
@@ -91,6 +113,7 @@ $ gradle bootRun --args='--spring.profiles.active=local'
 
 #### 4. Запустить в любой последовательности другие сервисы: rococo-gateway, rococo-userdata, rococo-artist, rococo-geo, rococo-museum, rococo-painting
 
+<a name="local-docker"></a>
 # Запуск Rococo в докере:
 
 #### 1. Создать бесплатную учетную запись на https://hub.docker.com/ (если отсутствует)
@@ -144,9 +167,39 @@ $ cd rococo
 $ bash docker-compose-dev.sh
 ```
 
-Текущая версия docker-compose-dev.sh удалит все старые Docker контейнеры в системе, поэтому если у вас есть созданные
+Текущая версия docker-compose-dev.sh удалит все старые Docker контейнеры в системе, поэтому если у Вас есть созданные
 контейнеры для других проектов - отредактируйте строку ```posh docker rm $(docker ps -a -q)```, чтобы включить в grep
 только те контейнеры, которые относятся к rococo.
 
-Rococo при запуске в докере будет работать для вас по адресу http://client.rococo.dc:80, этот порт не нужно
+Rococo при запуске в докере будет работать для Вас по адресу http://client.rococo.dc:80, этот порт не нужно
 указывать в браузере, таким образом переходить напрямую по ссылке http://client.rococo.dc
+
+<a name="local-run-tests"></a>
+# Запуск тестов локально
+**Обратите внимание! Запуск тестов происходит в три потока. Изменить число потоков можно в файле [junit-platform.properties](rococo-tests%2Fsrc%2Ftest%2Fresources%2Fjunit-platform.properties)**
+
+Если приложение было запущено локально через IDE:
+```posh
+$ ./gradlew :rococo-tests:clean test
+```
+
+Если приложение было запущено в докере:
+```posh
+$ ./gradlew :rococo-tests:clean test -Dtest.env=docker
+```
+
+После прогона тестов запустить формирование отчёта командой:
+```posh
+$ ./gradlew :rococo-tests:allureServe
+```
+
+<a name="report"></a>
+# Пример тестового отчета
+
+<p align="center">
+  <img src="images/allure-overview.jpg" alt="Allure Overview" width="800">
+</p>
+
+<p align="center">
+  <img src="images/allure-suites.jpg" alt="Allure Suites" width="1200">
+</p>
