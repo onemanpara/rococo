@@ -8,7 +8,7 @@ public interface Config {
         return LocalConfig.config;
     }
 
-    String databaseHost();
+    String databaseAddress();
 
     String rococoFrontendUrl();
 
@@ -22,27 +22,33 @@ public interface Config {
         return "secret";
     }
 
-    default int databasePort() {
-        return 3306;
-    }
-
     String userdataGrpcAddress();
 
-    int userdataGrpcPort();
+    default int userdataGrpcPort() {
+        return 8091;
+    }
 
     String artistGrpcAddress();
 
-    int artistGrpcPort();
+    default int artistGrpcPort() {
+        return 8092;
+    }
 
     String museumGrpcAddress();
 
-    int museumGrpcPort();
+    default int museumGrpcPort() {
+        return 8093;
+    }
 
     String geoGrpcAddress();
 
-    int geoGrpcPort();
+    default int geoGrpcPort() {
+        return 8094;
+    }
 
     String paintingGrpcAddress();
 
-    int paintingGrpcPort();
+    default int paintingGrpcPort() {
+        return 8095;
+    }
 }

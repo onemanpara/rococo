@@ -7,15 +7,15 @@ public class DockerConfig implements Config {
     static final DockerConfig config = new DockerConfig();
 
     static {
-        Configuration.remote = "http://selenoid:4444/wd";
-        Configuration.browser = "chrome";
+        Configuration.remote = "http://selenoid:4444/wd/hub";
+        Configuration.browserSize = "1920x1080";
         Configuration.browserCapabilities = new ChromeOptions()
                 .addArguments("--no-sandbox");
     }
 
     @Override
-    public String databaseHost() {
-        return "rococo-all-db";
+    public String databaseAddress() {
+        return "rococo-all-db:3306";
     }
 
     @Override
@@ -30,51 +30,26 @@ public class DockerConfig implements Config {
 
     @Override
     public String userdataGrpcAddress() {
-        return "rococo-userdata";
-    }
-
-    @Override
-    public int userdataGrpcPort() {
-        return 8091;
+        return "userdata.rococo.dc";
     }
 
     @Override
     public String artistGrpcAddress() {
-        return "rococo-artist";
-    }
-
-    @Override
-    public int artistGrpcPort() {
-        return 8092;
+        return "artist.rococo.dc";
     }
 
     @Override
     public String museumGrpcAddress() {
-        return "rococo-museum";
-    }
-
-    @Override
-    public int museumGrpcPort() {
-        return 8093;
+        return "museum.rococo.dc";
     }
 
     @Override
     public String geoGrpcAddress() {
-        return "rococo-geo";
-    }
-
-    @Override
-    public int geoGrpcPort() {
-        return 8094;
+        return "geo.rococo.dc";
     }
 
     @Override
     public String paintingGrpcAddress() {
-        return "rococo-painting";
-    }
-
-    @Override
-    public int paintingGrpcPort() {
-        return 8095;
+        return "painting.rococo.dc";
     }
 }

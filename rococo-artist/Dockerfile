@@ -6,6 +6,5 @@ ENV JAVA_OPTS=""
 WORKDIR /application
 COPY rococo-artist-$VER.jar ./
 
-EXPOSE 8091
 EXPOSE 8092
 CMD java -jar -Dspring.profiles.active=docker $JAVA_OPTS rococo-artist-$VER.jar

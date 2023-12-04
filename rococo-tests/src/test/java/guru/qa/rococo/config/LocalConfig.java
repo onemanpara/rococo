@@ -10,8 +10,8 @@ public class LocalConfig implements Config {
     }
 
     @Override
-    public String databaseHost() {
-        return "localhost";
+    public String databaseAddress() {
+        return "localhost:3306";
     }
 
     @Override
@@ -30,18 +30,8 @@ public class LocalConfig implements Config {
     }
 
     @Override
-    public int userdataGrpcPort() {
-        return 8091;
-    }
-
-    @Override
     public String artistGrpcAddress() {
         return "localhost";
-    }
-
-    @Override
-    public int artistGrpcPort() {
-        return 8092;
     }
 
     @Override
@@ -50,29 +40,13 @@ public class LocalConfig implements Config {
     }
 
     @Override
-    public int museumGrpcPort() {
-        return 8093;
-    }
-
-    @Override
     public String geoGrpcAddress() {
         return "localhost";
-    }
-
-    @Override
-    public int geoGrpcPort() {
-        return 8094;
     }
 
     @Override
     public String paintingGrpcAddress() {
         return "localhost";
     }
-
-    @Override
-    public int paintingGrpcPort() {
-        return 8095;
-    }
-
 
 }
