@@ -10,4 +10,8 @@ COPY ./rococo-grpc-common ./rococo-grpc-common
 COPY ./build.gradle ./
 COPY ./settings.gradle ./
 
-CMD chmod +x ./rococo-tests/send_results.sh; ./gradlew test -Dtest.env=docker; bash ./rococo-tests/send_results.sh
+RUN chmod +x ./rococo-tests/send_results.sh \
+    && sed -i 's/\r$//' gradlew \
+    && chmod +x gradlew
+
+CMD ./gradlew test -Dtest.env=docker; bash ./rococo-tests/send_results.sh
