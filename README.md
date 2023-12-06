@@ -236,11 +236,11 @@ $ ./gradlew :rococo-tests:allureServe
 
 <a name="docker-run-tests"></a>
 # Запуск тестов в докере
-0. Добавить в файл hosts строку (как работать с файлом hosts описано в пункте [Прописать в etc/hosts элиас для Docker-имени](#hosts)): 
-<br>
-**127.0.0.1 allure**
+0. Добавить в файл hosts строку (как работать с файлом hosts описано в пункте [Прописать в etc/hosts элиас для Docker-имени](#hosts)):
+<b>127.0.0.1 allure</b>
 <br>
 Итоговый файл hosts должен выглядеть следующим образом:
+
 ```posh
 ##
 # Host Database
