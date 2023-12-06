@@ -4,7 +4,8 @@
     "versions": {
       "119.0": {
         "image": "selenoid/vnc_chrome:119.0",
-        "port": "4444"
+        "port": "4444",
+        "env": [ "LANG=ru_RU.UTF-8" ]
       }
     }
   }

@@ -6,6 +6,7 @@
 
 ## Оглавление
 
+- [Используемые технологии](#techonology)
 - [Архитектура приложения](#architecture)
 - [Список портов приложения](#ports)
 - [Запуск Rococo локально в IDE](#local-run)
@@ -13,6 +14,31 @@
 - [Запуск тестов локально](#local-run-tests)
 - [Запуск тестов в докере](#docker-run-tests)
 - [Пример тестового отчёта](#report)
+
+<a name="techonology"></a>
+# Используемые технологии
+
+- [Spring Authorization Server](https://spring.io/projects/spring-authorization-server)
+- [Spring OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+- [Spring Web](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#spring-web)
+- [Spring Actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html)
+- [Spring gRPC by https://github.com/yidongnan](https://yidongnan.github.io/grpc-spring-boot-starter/en/server/getting-started.html)
+- [Apache Kafka](https://kafka.apache.org/)
+- [Docker](https://www.docker.com/resources/what-container/)
+- [Docker-compose](https://docs.docker.com/compose/)
+- [MySQL](https://www.mysql.com/about/)
+- [Svelte](https://ru.reactjs.org/docs/getting-started.html)
+- [JUnit 5 (Extensions, Resolvers, etc)](https://junit.org/junit5/docs/current/user-guide/)
+- [Retrofit 2](https://square.github.io/retrofit/)
+- [Allure](https://docs.qameta.io/allure/)
+- [Selenide](https://selenide.org/)
+- [Selenoid & Selenoid-UI](https://aerokube.com/selenoid/latest/)
+- [Allure-docker-service](https://github.com/fescobar/allure-docker-service)
+- [Java 17](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
+- [Gradle 8](https://docs.gradle.org/8.0/release-notes.html)
+- И многое другое!
+
 
 <a name="architecture"></a>
 ## Архитектура приложения
@@ -143,12 +169,11 @@ $ gradle bootRun --args='--spring.profiles.active=local'
 
 #### 3. Выполнить docker login с созданным access_token (в инструкции это описано)
 
+<a name="hosts"></a>
 #### 4. Прописать в etc/hosts элиас для Docker-имени
 
 #### frontend:  127.0.0.1 client.rococo.dc,
-
 #### auth:      127.0.0.1 auth.rococo.dc
-
 #### gateway:   127.0.0.1 gateway.rococo.dc
 
 Для *nix:
@@ -166,6 +191,7 @@ $ vi /etc/hosts
 127.0.0.1       client.rococo.dc
 127.0.0.1       auth.rococo.dc
 127.0.0.1       gateway.rococo.dc
+127.0.0.1       allure
 ```
 
 В windows файл hosts лежит по пути:
@@ -198,24 +224,47 @@ Rococo при запуске в докере будет работать для 
 **Обратите внимание! Запуск тестов происходит в три потока. Изменить число потоков можно в
 файле [junit-platform.properties](rococo-tests%2Fsrc%2Ftest%2Fresources%2Fjunit-platform.properties)**
 
-Если приложение было запущено локально через IDE:
+1. Запустить приложение локально и запустить тесты из корня проекта
 ```posh
 $ ./gradlew :rococo-tests:clean test
 ```
 
-*Если приложение было запущено в докере - пока не работает запуск тестов на поднятом в докере окружении*
-```posh
-$ ./gradlew :rococo-tests:clean test -Dtest.env=docker
-```
-
-После прогона тестов запустить формирование отчёта командой:
+2. После прогона тестов запустить формирование отчёта командой:
 ```posh
 $ ./gradlew :rococo-tests:allureServe
 ```
 
 <a name="docker-run-tests"></a>
 # Запуск тестов в докере
-**TODO**
+0. Добавить в файл hosts строку (как работать с файлом hosts описано в пункте [Прописать в etc/hosts элиас для Docker-имени](#hosts)): 
+<br>
+**127.0.0.1 allure**
+<br>
+Итоговый файл hosts должен выглядеть следующим образом:
+```posh
+##
+# Host Database
+#
+# localhost is used to configure the loopback interface
+# when the system is booting.  Do not change this entry.
+##
+127.0.0.1       localhost
+127.0.0.1       client.rococo.dc
+127.0.0.1       auth.rococo.dc
+127.0.0.1       gateway.rococo.dc
+127.0.0.1       allure
+```
+
+1. Запустить скрипт:
+```posh
+$ bash docker-compose-dev.sh
+```
+
+2. После того, как все контейнеры успешно соберутся и запустятся - переключиться на логи контейнера rococo-tests командой:
+```posh
+$ docker logs -f rococo-tests
+```
+3. После прогона тестов в логах отобразиться ссылка на аллюр отчёт
 
 <a name="report"></a>
 # Пример тестового отчета
