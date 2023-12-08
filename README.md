@@ -16,7 +16,7 @@
 - [Пример тестового отчёта](#report)
 
 <a name="techonology"></a>
-# Используемые технологии
+## Используемые технологии
 
 - [Spring Authorization Server](https://spring.io/projects/spring-authorization-server)
 - [Spring OAuth 2.0 Resource Server](https://docs.spring.io/spring-security/reference/servlet/oauth2/resource-server/index.html)
