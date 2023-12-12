@@ -141,10 +141,17 @@ npm run dev
 Фронт стартанет в браузере на порту 3000: http://127.0.0.1:3000/  
 Надо использовать именно 127.0.0.1, а не localhost
 
-#### 2. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
+#### 2. Прописать run конфигурацию для всех сервисов rococo-* (за исключением grpc-common, client и tests) - Active profiles local
 
 Для этого зайти в меню Run -> Edit Configurations -> выбрать main класс -> в поле Environment variables указать
 spring.profiles.active=local
+
+<img src="images/gif/set-profile1.gif" alt="Set Profile">
+
+Либо перейти к main-классу каждого приложения -> кликнуть по методу ПКМ -> выбрать More Run/Debug -> Modify Run Configuration -> в поле Environment variables указать
+spring.profiles.active=local
+
+<img src="images/gif/set-profile2.gif" alt="Set Profile">
 
 #### 3. Запустить сервис rococo-auth c помощью gradle или командой Run в IDE:
 
