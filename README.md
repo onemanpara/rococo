@@ -141,7 +141,7 @@ npm run dev
 Фронт стартанет в браузере на порту 3000: http://127.0.0.1:3000/  
 Надо использовать именно 127.0.0.1, а не localhost
 
-#### 2. Прописать run конфигурацию для всех сервисов rococo-* (за исключением grpc-common, client и tests) - Active profiles local
+#### 2. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
 
 Для этого зайти в меню Run -> Edit Configurations -> выбрать main класс -> в поле Environment variables указать
 spring.profiles.active=local
