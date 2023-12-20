@@ -139,7 +139,6 @@ npm run dev
 ```
 
 Фронт стартанет в браузере на порту 3000: http://127.0.0.1:3000/  
-Надо использовать именно 127.0.0.1, а не localhost
 
 #### 2. Прописать run конфигурацию для всех сервисов rococo-* - Active profiles local
 
@@ -165,14 +164,12 @@ $ gradle bootRun --args='--spring.profiles.active=local'
 
 #### 4. Запустить в любой последовательности другие сервисы: rococo-gateway, rococo-userdata, rococo-artist, rococo-geo, rococo-museum, rococo-painting
 
-<a name="local-docker"></a>
+<a name="docker-run"></a>
 # Запуск Rococo в докере:
 
 #### 1. Создать бесплатную учетную запись на https://hub.docker.com/ (если отсутствует)
 
-#### 2. Создать в настройках своей учетной записи access_token
-
-[Инструкция](https://docs.docker.com/docker-hub/access-tokens/).
+#### 2. Создать в настройках своей учетной записи access_token [Инструкция](https://docs.docker.com/docker-hub/access-tokens/).
 
 #### 3. Выполнить docker login с созданным access_token (в инструкции это описано)
 
@@ -198,7 +195,6 @@ $ vi /etc/hosts
 127.0.0.1       client.rococo.dc
 127.0.0.1       auth.rococo.dc
 127.0.0.1       gateway.rococo.dc
-127.0.0.1       allure
 ```
 
 В windows файл hosts лежит по пути:
@@ -265,7 +261,7 @@ $ ./gradlew :rococo-tests:allureServe
 
 1. Запустить скрипт:
 ```posh
-$ bash docker-compose-dev.sh
+$ bash docker-compose-test.sh
 ```
 
 2. После того, как все контейнеры успешно соберутся и запустятся - переключиться на логи контейнера rococo-tests командой:
