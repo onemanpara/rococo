@@ -22,6 +22,12 @@ spring:
       auto-commit: true
     username: root
     password: secret
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+    schemas: rococo-auth
+    locations: classpath:db/migration/rococo-auth
   jpa:
     properties:
       hibernate:
@@ -31,9 +37,6 @@ spring:
     database-platform: org.hibernate.dialect.MySQLDialect
     show-sql: false
     generate-ddl: true
-  sql:
-    init:
-      mode: always
 
 logging:
   level:

@@ -20,7 +20,7 @@ spring:
     baseline-on-migrate: true
     baseline-version: 0
     schemas: rococo-geo
-    locations: classpath:db.migration.rococo-geo
+    locations: classpath:db/migration/rococo-geo
   jpa:
     properties:
       hibernate:
