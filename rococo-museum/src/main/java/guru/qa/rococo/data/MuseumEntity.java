@@ -5,8 +5,8 @@ import guru.qa.grpc.rococo.grpc.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -72,17 +72,19 @@ public class MuseumEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MuseumEntity entity = (MuseumEntity) o;
-        return Objects.equals(id, entity.id) && Objects.equals(title, entity.title) && Objects.equals(description, entity.description) && Objects.equals(city, entity.city) && Arrays.equals(photo, entity.photo) && Objects.equals(geoId, entity.geoId);
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        MuseumEntity that = (MuseumEntity) o;
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
-        int result = Objects.hash(id, title, description, city, geoId);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }

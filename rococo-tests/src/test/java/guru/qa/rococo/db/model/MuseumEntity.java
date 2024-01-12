@@ -1,11 +1,10 @@
 package guru.qa.rococo.db.model;
 
-import guru.qa.rococo.model.MuseumJson;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.proxy.HibernateProxy;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -29,29 +28,20 @@ public class MuseumEntity {
     @Column(name = "geo_id", nullable = false)
     private UUID geoId;
 
-    public static MuseumEntity fromJson(MuseumJson museumJson) {
-        MuseumEntity museumEntity = new MuseumEntity();
-        museumEntity.setId(museumJson.getId());
-        museumEntity.setTitle(museumJson.getTitle());
-        museumEntity.setDescription(museumJson.getDescription());
-        museumEntity.setCity(museumJson.getGeo().getCity());
-        museumEntity.setPhoto(museumJson.getPhoto().getBytes());
-        museumEntity.setGeoId(museumJson.getGeo().getCountry().id());
-        return museumEntity;
-    }
-
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
         MuseumEntity that = (MuseumEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(title, that.title) && Objects.equals(description, that.description) && Objects.equals(city, that.city) && Arrays.equals(photo, that.photo) && Objects.equals(geoId, that.geoId);
+        return getId() != null && Objects.equals(getId(), that.getId());
     }
 
     @Override
-    public int hashCode() {
-        int result = Objects.hash(id, title, description, city, geoId);
-        result = 31 * result + Arrays.hashCode(photo);
-        return result;
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 }
